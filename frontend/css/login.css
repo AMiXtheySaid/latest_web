@@ -1,3 +1,5 @@
+@import url(https://fonts.googleapis.com/css?family=Poppins:300);
+
 body {
     background-image: url('../pictures/login.png');
     background-size: cover;
@@ -19,11 +21,9 @@ h2 {
     color: white;
 }
 
-@import url(https://fonts.googleapis.com/css?family=Poppins:300);
-
 .form {
     padding: 8% 0 0;
-    width: 400px;
+    width: 37vw;
     margin: auto;
     position: relative;
     z-index: 1;
@@ -52,15 +52,28 @@ h2 {
     background: transparent;
 }
 
+.form ::placeholder {
+    padding: 10px;
+}
+
 .form .message {
     margin: 15px 0 0;
     color: #b3b3b3;
     font-size: 0.7rem;
 }
 
-.form .message a {
+.login_btn {
     color: #289bb8;
     text-decoration: none;
+}
+
+.sec_btn {
+    background-color: transparent;
+    border: none;
+    text-decoration: none;
+    font-size: 0.6rem;
+    color: #289bb8;
+    text-align: center;
 }
 
 .btn {
@@ -74,6 +87,8 @@ h2 {
     transition: .5s;
     margin-top: 15px;
     letter-spacing: 2px;
+    background-color: transparent;
+    border: none;
 }
 
 .btn:hover {
