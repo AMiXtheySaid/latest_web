@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register</title>
     <link href="css/register.css" rel="stylesheet" type="text/css">
-    <script rel="text/javascript" src="js/register.js"></script>
 </head>
 <body>
     <div class="form">
@@ -14,16 +13,19 @@
             <input type="text" id="reg_usernameBox" placeholder="Username *" required/>
             <input type="password" id="reg_passwordBox" placeholder="Password *" required/>
             <input type="text" id="reg_emailBox" placeholder="E-mail *" required/>
-            <button type="button" class="btn create_btn" onclick="registerBtn()">
+            <button type="button" class="btn create_btn" id="registerBtn">
                 <span></span>
                 <span></span>
                 <span></span>
                 <span></span>
                 Create
             </button>
-            <p class="message">Already registered? <button type="button" class="sec_btn" onclick="goToLogin()">Sing In</button></p>
+            <p class="message">Already registered? <button type="button" class="sec_btn" onclick="">Sing In</button></p>
             <p class="message">Not ready to join yet? <button type="button" class="sec_btn" onclick="">Go back</button></p>
         </form>
     </div>
 </body>
+
+<script rel="text/javascript" src="js/register.js"></script>
+
 </html>

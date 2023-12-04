@@ -1,60 +1,31 @@
-const mysql = require('mysql2');
-const fs = require('fs');
-
-const con = mysql.createConnection({
-    host: 'localhost',
-    port: 3000,
-    user: 'root',
-    password: '88P09PR9V',
-    database:'latest'
-})
+const { mysql, credentials, fs, logPath } = require('./db_credentials.js');
 
 async function signinBtn(username, password) {
-    con.connect((err) => {
-        if (err) {
-            console.error('Error connecting to the database', err);
-                return;
+    const pool = mysql.createPool(credentials);
+
+    try {
+        const con = await pool.getConnection();
+        const [rows] = await con.query("SELECT id, password FROM Users WHERE username = ?", [username]);
+        const returnedId = rows.length > 0 ? rows[0].id : null;
+
+        if (returnedId !== null) {
+            const returnedPassword = rows.length > 0 ? rows[0].password : null;
+
+            if (returnedPassword === password) {
+                const loginDate = new Date();
+                await fs.appendFile(logPath, `${loginDate}: User ${username} successfully connected\n`);
+                return { success: true, message: "Successfully connected!"};
+            } else {
+                return { success: false, message: 'Incorrect username or password!'};
+            }
+        } else {
+            return { success: false, message: 'Incorrect username or password!'};
         }
-
-        var returned_id = 0;
-
-        con.query('SELECT (id, password) FROM Users WHERE username = ?', username, (err, rows) => {
-            if (err) {
-                console.log('Error executing SELECT query', err.message);
-                return;
-            }
-            
-            returned_id = rows.length > 0 ? rows[0].id : null;
-            if (returned_id !== 0) { // there exists such a user
-                const returned_password = rows.length > 0 ? rows[0].password : null;
-
-                if (returned_password === password) { 
-                    // allow
-                    const login_date = new Date();
-
-                    fs.appendFile(logPath, `${login_date}: User ${username} successfully logged in\n`, (err) => {
-                        if (err) {
-                            throw err;
-                        }
-                        else {
-                        console.log(`${username} successfully logged in`);
-                        }
-                    })
-
-                    alert("Successfully connected!");
-                }
-                else {
-                    alert("Wrong username or password!");
-                }
-            }
-            else {
-                alert("Wrong username or password!");
-            }
-           
-        })
-
-        con.end();
-    })
+    } catch (error) {
+        console.error('Error: ', error);
+    } finally {
+        pool.end();
+    }
 }
 
-export default signinBtn;
+module.exports = signinBtn;
