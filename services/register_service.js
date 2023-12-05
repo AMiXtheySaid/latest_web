@@ -5,7 +5,7 @@ async function registerBtn(username, password, email) {
 
     try {
         const con = await pool.getConnection();
-        const [rows] = await con.query('SELECT id FROM Users WHERE username = ?', [username]);
+        const [rows] = await con.query('SELECT id FROM users WHERE username = ?', [username]);
         const returnedId = rows.length > 0 ? rows[0].id : null;
 
         if (returnedId !== null) {
