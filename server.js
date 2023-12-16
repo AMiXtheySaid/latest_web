@@ -30,7 +30,7 @@ app.post('/login', async (req, res) => {
         if (result && result.success) {
             res.status(200).send('Logged in successfully!');
             res.header('Authorization', `Bearer ${result.token}`);
-            res.redirect(302, 'http://localhost:2999/home');
+            res.redirect(302, '/home');
         } else {
             console.log(`Login failed: ${result.message}`);
             res.status(401).send(`Login failed: ${result.message}`);
@@ -44,13 +44,35 @@ app.post('/login', async (req, res) => {
 
 app.post('/register', async (req, res) => {
     const { username, password, email } = req.body;
-    const result = await registerBtn(username, password, email);
-    if (result.success) {
-        res.status(200).send();
-    } else {
-        res.status(400).send(`${result.message}`);
+
+    try {
+        const result = await registerBtn(username, password, email);
+
+        if (result.success) {
+            res.status(200).send('Successfully registered!');
+
+            // log in automatically after a successful registration
+            try {
+                const result1 = await signinBtn(username, password);
+
+                if (result1 && result1.success) {
+                    res.header('Authorization', `Bearer ${result.token}`);
+                    res.redirect(302, '/home')
+                } else {
+                    console.log(`Login failed: ${result.message}`);
+                    res.status(500).send(`Automatic login failed ${result.message}`);
+                }
+            } catch (err1) {
+                res.status(500).send('Internal server error');
+            }
+        } else {
+            res.status(401).send(`${result.message}`);
+        }
+    } catch (err) {
+        console.error('Error during register: ', err);
+        res.status(500).send('Internal server error');
     }
-    console.log(req.body);
+    
 })
 
 app.listen(port, () => {
