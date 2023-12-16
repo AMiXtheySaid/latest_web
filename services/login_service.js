@@ -1,4 +1,6 @@
 const { mysql, credentials, fs, logPath } = require('./db_credentials.js');
+const crypto = require('crypto');
+const jwt = require('jsonwebtoken');
 
 async function signinBtn(username, password) {
     const pool = mysql.createPool(credentials);
@@ -14,7 +16,8 @@ async function signinBtn(username, password) {
             if (returnedPassword === password) {
                 const loginDate = new Date();
                 await fs.appendFile(logPath, `${loginDate}: User ${username} successfully connected\n`);
-                return { success: true, message: "Successfully connected!"};
+                const token = await generateToken(username, returnedId);
+                return { success: true, message: "Successfully connected!", token };
             } else {
                 return { success: false, message: 'Incorrect username or password!'};
             }
@@ -28,14 +31,13 @@ async function signinBtn(username, password) {
     }
 }
 
-function rand() {
-    return Math.random().toString(36).substring(2);
+function generateSecretKey(length) {
+    return crypto.randomBytes(length).toString('hex');
+}
+const secretKey = generateSecretKey(32);
+
+function generateToken(username, id) {
+    return jwt.sign( { username, id }, secretKey);
 }
 
-async function tokenGen() {
-    var part1 = rand();
-    var part2 = rand();
-    return part1 + part2;
-}
-
-module.exports = { signinBtn, tokenGen };
+module.exports = { signinBtn };

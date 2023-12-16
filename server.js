@@ -1,6 +1,6 @@
 const express = require('express');
 const path = require("path");
-const { signinBtn, tokenGen } = require('./services/login_service');
+const { signinBtn } = require('./services/login_service');
 const registerBtn = require('./services/register_service');
 
 const app = express();
@@ -23,18 +23,23 @@ app.get('/register', (req, res) => {
 
 app.post('/login', async (req, res) => {
     const { username, password } = req.body;
-    const result = await signinBtn(username, password);
-    const token = await tokenGen();
 
-    // console.log(req.body);
-    if (result.success) {
-        console.log(`Your token is: ${token}`);
-        res.header('Authorisation', `Bearere ${token}`);
-        res.redirect(307, '/home');
-    } else {
-        console.log(`Login failed: ${result.message}`);
-        res.status(400).send(`Login failed: ${result.message}`);
+    try {
+        const result = await signinBtn(username, password);
+
+        if (result && result.success) {
+            res.status(200).send('Logged in successfully!');
+            res.header('Authorization', `Bearer ${result.token}`);
+            res.redirect(302, 'http://localhost:2999/home');
+        } else {
+            console.log(`Login failed: ${result.message}`);
+            res.status(401).send(`Login failed: ${result.message}`);
+        }
+    }catch (err) {
+        console.error('Error during login: ', err);
+        res.status(500).send('Internal server error');
     }
+    
 });
 
 app.post('/register', async (req, res) => {
