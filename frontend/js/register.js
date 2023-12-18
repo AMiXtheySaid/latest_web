@@ -1,3 +1,10 @@
+async function setCookie(name, value, days) {
+    const expirationDate = new Date();
+    expirationDate.setDate(expirationDate.getDate() + days);
+
+    document.cookie = `${name}=${value}; expires=${expirationDate.toUTCString()}; path=/`;
+}
+
 document.getElementById("registerBtn").onclick = async function () {
     const username = document.querySelector('#reg_usernameBox').value;
     const password = document.querySelector('#reg_passwordBox').value;
@@ -15,7 +22,7 @@ document.getElementById("registerBtn").onclick = async function () {
         if (res.ok) {
             const result = await res.json();
             if (result.success) {
-                console.log(`Your token is ${result.token}`);
+                setCookie('myToken', result.token, 14);
                 window.location.replace('/home');
             } else {
                 document.getElementById('errorMessage').textContent = result.message;
@@ -30,3 +37,10 @@ document.getElementById("registerBtn").onclick = async function () {
     }
         
 };
+document.getElementById('gotoLogin').onclick = async function () {
+    window.location.replace('/login');
+}
+
+document.getElementById('gotoMain').onclick = async function () {
+    window.location.replace('/home');
+}

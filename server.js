@@ -21,6 +21,14 @@ app.get('/register', (req, res) => {
     res.sendFile(path.resolve(__dirname, './frontend/register.html'));
 });
 
+app.get('/contact', async (req, res) => {
+    res.sendFile(path.resolve(__dirname, './frontend/contact.html'));
+})
+
+app.get('/about-us', (req, res) => {
+    res.sendFile(path.resolve(__dirname, './frontend/aboutUs.html'));
+});
+
 app.post('/login', async (req, res) => {
     const { username, password } = req.body;
 
@@ -29,7 +37,6 @@ app.post('/login', async (req, res) => {
 
         if (result && result.success) {
             res.status(200).json({ success: true, message: 'Logged in successfully!', token: result.token });
-            //res.redirect(302, '/home');
         } else {
             console.log(`Login failed: ${result.message}`);
             res.status(400).json({ success: false, message: `${result.message}` });
@@ -51,7 +58,7 @@ app.post('/register', async (req, res) => {
             const autoLoginResult = await signinBtn(username,password);
             // log in automatically after a successful registration
             if (autoLoginResult.success) {
-                res.status(200).json({ success: true, message: 'Successfully registered!\n\tRedirecting...', token: autoLoginResult.token })
+                res.status(200).json({ success: true, message: 'Successfully registered!\n\tRedirecting...', token: autoLoginResult.token });
             } else {
                 console.log(`Automatic login failed: ${autoLoginResult.message}`);
                 res.status(500).json({ success: false, message: `Automatic login failed: ${autoLoginResult.message}` });
