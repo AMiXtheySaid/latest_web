@@ -7,11 +7,12 @@
     <link rel="stylesheet" type="text/css" href="css/login.css">
 </head>
 <body>
-    <div class="form">
+    <div class="form" id="login-form">
         <form class="login-form">
             <h2><i>Log In</i></h2>
-            <input type="text" id="log_usernameBox" placeholder="Username" required/>
-            <input type="password" id="log_passwordBox" placeholder="Password" required/>
+            <input type="text" id="log_usernameBox" placeholder="Username" required>
+            <input type="password" id="log_passwordBox" placeholder="Password" required>
+            <div id="errorMessage" class="error-message"></div>
             <button type="button" class="btn login_btn" id="loginBtn">
                 <span></span>
                 <span></span>
@@ -19,13 +20,24 @@
                 <span></span>
                 Sign In
             </button>
-            <p class="message">Not registered? <button type="button" id="gotoRegister" class="sec_btn">Create an account</button></p>
-            <p class="message">Continue without any account? <button type="button" id="gotoMain" class="sec_btn">Go back</button></p>
-            <div id="errorMessage" class="error-message"></div>
+            <p class="message">Not registered? <button type="button" id="goToRegister" class="sec_btn">Create an account</button></p>
+            <p class="message">Forgot password? <button type="button" id="goToForgotPassword" class="sec_btn">Here</button></p>
         </form> 
+        <p><button type="button" id="goToMain" class="sec_btn">Home page</button></p>
     </div>
+
+    <div class="form" id="forgotPasswordForm">
+        <form class="login-form">
+            <input type="text" id="emailBox" placeholder="Email" required>
+            <p></p>
+            <div id="errorMessage" class="error-message"></div>
+            <p></p>
+            <button type="button" class="btn" id="forgotPasswordBtn">Send</button>
+        </form>
+        <p><button type="button" id="goToLogin" class="sec_btn">Go to LogIn</button></p>
+    </div>
+
 </body>
 
 <script type="text/javascript" src="js/login.js"></script>
-
 </html>

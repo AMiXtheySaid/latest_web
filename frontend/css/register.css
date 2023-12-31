@@ -50,10 +50,7 @@ h2 {
     border-bottom: 1px solid #fff;
     outline: none;
     background: transparent;
-}
-
-.form ::placeholder {
-    padding: 10px;
+    padding-left: 0.8rem;
 }
 
 .form .message {

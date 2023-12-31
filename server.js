@@ -1,10 +1,12 @@
 const express = require('express');
 const path = require("path");
-const { signinBtn } = require('./services/login_service');
-const registerBtn = require('./services/register_service');
-
 const app = express();
 const port = 2999;
+
+// import services
+const { signinBtn } = require('./services/login_service');
+const { registerBtn } = require('./services/register_service');
+const { emailValidator, resetPassword } = require('./services/email_password_service')
 
 app.use(express.static(path.join(__dirname, './frontend')));
 app.use(express.json());
@@ -71,6 +73,16 @@ app.post('/register', async (req, res) => {
         console.error('Error during register: ', err);
         res.status(500).json({ success: false, message:'Internal server error' });
     }
+})
+
+app.post('/forgot-password', async (req, res) => {
+    // here
+    const { email } = req.body;
+    await emailValidator(email);
+})
+
+app.post('/change-password', async (req, res) => {
+    // here
 })
 
 app.listen(port, () => {

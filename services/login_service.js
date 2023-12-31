@@ -24,8 +24,9 @@ async function signinBtn(username, password) {
         } else {
             return { success: false, message: 'Incorrect username or password!'};
         }
-    } catch (error) {
-        console.error('Error: ', error);
+    } catch (err) {
+        console.error('Error: ', err);
+        return { success: false, message: 'An internal error occured' };
     } finally {
         pool.end();
     }

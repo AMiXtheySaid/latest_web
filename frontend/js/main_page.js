@@ -28,7 +28,6 @@ document.addEventListener('DOMContentLoaded', function() {
         isLoggedIn = 0;
     }
 
-    // continua
     if (isLoggedIn === 0) {
         loginProfile.textContent = 'Login';
         expandedLoginProfile.style.display = 'none';
@@ -64,3 +63,5 @@ document.getElementById('logOut').onclick = async function() {
     deleteCookie('myToken');
     window.location.replace('/home');
 }
+
+
