@@ -91,7 +91,7 @@ async function getId(username) {
         var [rows] = await con.query("SELECT id FROM users WHERE username = ?", [username]);
         const returnedId = rows.length > 0 ? rows[0].id : null;
 
-        return { success: true, message: 'An internal error occured', data: returnedId };
+        return { success: true, data: returnedId };
     } catch (err) {
         console.log('Error: ', err);
         return { success: false, message: 'An internal error occured' };

@@ -75,6 +75,7 @@ app.post('/register', async (req, res) => {
 
            // modifica si tu aici
            storeSecretKey(username);
+           signinBtn(username, password);
            res.status(200).json({ success: true, message: 'Successfully registered!' });
         } else { // bad credentials/ credentials don't meet the requirements/ already taken username
             res.status(400).json({ success: false, message: `${result.message}` });
