@@ -3,13 +3,13 @@ body {
     font-size: clamp(8px, 16vw, 16px);
     margin: 0;
     font-family: Arial, Helvetica, sans-serif;
+    background-size: cover;
 }
 
 .navbar {
     background-color: #6039BC;
     max-height: 3rem;
     max-width: 100%;
-
 }
 
 .navbar ul{
@@ -63,4 +63,9 @@ body {
 .expanded_login_profile button:hover {
     color: #a481f5;
     background-color: #5C63C7;
+}
+
+.error-message {
+    color: #ff0000;
+    margin-top: 0.7rem;
 }

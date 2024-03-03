@@ -22,7 +22,7 @@ document.getElementById("registerBtn").onclick = async function () {
         if (res.ok) {
             const result = await res.json();
             if (result.success) {
-                setCookie('myToken', result.token, 14);
+                // setCookie('myToken', result.token, 14);
                 window.location.replace('/home');
             } else {
                 document.getElementById('errorMessage').textContent = result.message;

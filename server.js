@@ -5,8 +5,8 @@ const port = 2999;
 
 // import services
 const { signinBtn } = require('./services/login_service');
-const { registerBtn } = require('./services/register_service');
-const { emailValidator, resetPassword } = require('./services/email_password_service')
+const { registerBtn, storeSecretKey } = require('./services/register_service');
+const { emailValidator, changePassword } = require('./services/email_password_service')
 
 app.use(express.static(path.join(__dirname, './frontend')));
 app.use(express.json());
@@ -29,6 +29,10 @@ app.get('/contact', async (req, res) => {
 
 app.get('/about-us', (req, res) => {
     res.sendFile(path.resolve(__dirname, './frontend/aboutUs.html'));
+});
+
+app.get('/change-password', async (req, res) => {
+    res.sendFile(path.resolve(__dirname, './frontend/changePassword.html'));
 });
 
 app.post('/login', async (req, res) => {
@@ -57,8 +61,9 @@ app.post('/register', async (req, res) => {
         const result = await registerBtn(username, password, email);
 
         if (result.success) {
+            /* --> log in automatically after a successful registration <--
             const autoLoginResult = await signinBtn(username,password);
-            // log in automatically after a successful registration
+            
             if (autoLoginResult.success) {
                 res.status(200).json({ success: true, message: 'Successfully registered!\n\tRedirecting...', token: autoLoginResult.token });
             } else {
@@ -66,6 +71,11 @@ app.post('/register', async (req, res) => {
                 res.status(500).json({ success: false, message: `Automatic login failed: ${autoLoginResult.message}` });
             }
             // end automatical log in
+            */
+
+           // modifica si tu aici
+           storeSecretKey(username);
+           res.status(200).json({ success: true, message: 'Successfully registered!' });
         } else { // bad credentials/ credentials don't meet the requirements/ already taken username
             res.status(400).json({ success: false, message: `${result.message}` });
         }
@@ -76,13 +86,20 @@ app.post('/register', async (req, res) => {
 })
 
 app.post('/forgot-password', async (req, res) => {
-    // here
     const { email } = req.body;
     await emailValidator(email);
 })
 
 app.post('/change-password', async (req, res) => {
-    // here
+    const { oldPassword, newPassword, repeatNewPassword } = req.body;
+
+    /*
+    try {
+
+    } catch {
+
+    }
+    */
 })
 
 app.listen(port, () => {

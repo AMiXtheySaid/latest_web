@@ -20,8 +20,9 @@ document.addEventListener('DOMContentLoaded', function() {
     let token = getCookie('myToken');
     const loginProfile = document.getElementById('loginProfile');
     const expandedLoginProfile = document.getElementById('expandedLoginProfile');
-
     let isLoggedIn
+
+    // verifica aici token ul sa fie OK
     if (token !== null) {
         isLoggedIn = 1;
     } else {
@@ -48,6 +49,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    //on load properties
     expandedLoginProfile.style.display = 'none';
 })
 
@@ -64,4 +66,6 @@ document.getElementById('logOut').onclick = async function() {
     window.location.replace('/home');
 }
 
-
+document.getElementById('changePassword').onclick = function() {
+    window.location.replace('/change-password');
+}

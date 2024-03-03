@@ -1,6 +1,7 @@
 const logPath = '../logs.txt';
 const mysql = require('mysql2/promise');
 const fs = require('fs/promises');
+const validator = require('validator');
 
 const credentials = {
     host: 'localhost',
@@ -10,4 +11,12 @@ const credentials = {
     database: 'latest'
 };
 
-module.exports = { mysql, credentials, fs, logPath };
+const secretKey_credentials = {
+    host: 'localhost',
+    port: 3000,
+    user: 'root',
+    password: '88P09PR9V',
+    database: 'secretKey'
+}
+
+module.exports = { mysql, credentials, fs, logPath, validator, secretKey_credentials };

@@ -67,7 +67,7 @@ document.getElementById('forgotPasswordBtn').onclick = async function() {
 
             if (result.success) {
                 // vezi aici
-                window.location.replace('/change-password');
+                window.location.replace('/forgot-password');
             } else {
                 document.getElementById('errorMessage').textContent = result.message;
             }

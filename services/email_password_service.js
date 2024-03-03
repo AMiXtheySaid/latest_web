@@ -1,9 +1,8 @@
-const e = require("express");
 const { mysql, credentials, fs, logPath } = require("./db_credentials");
 
-async function emailValidator(email) {
-    const pool = mysql.createPool(credentials);
+const pool = mysql.createPool(credentials);
 
+async function emailValidator(email) {
     try {
         const con = await pool.getConnection();
         const [rows] = await con.query('SELECT id FROM users WHERE email = ?', [email]);
@@ -22,15 +21,24 @@ async function emailValidator(email) {
     }
 }
 
-async function resetPassword(email, newPassword, repeatNewPassword) {
+async function changePassword(username, newPassword, repeatNewPassword) {
+    const con = await pool.getConnection();
+    const [rows] = await con.query('SELECT id FROM users WHERE username = ?', [username]);
+    const returnedId = rows.length > 0 ? rows[0].id : null;
+    
     if (newPassword !== repeatNewPassword) {
         return { success: false, message: 'The passwords do not match' };
     }
-    const pool = mysql.createPool(credentials);
 
     try {
-        // fa functia asta
-        
+        if (passwordChecker === 1) {
+            if (newPassword === repeatNewPassword) {
+                await con.query(`UPDATE users SET password = ? WHERE id = ?`, [newPassword, returnedId]);
+                return { success: true, message: 'Password successfully changed' };
+            } else {
+                return { success: false, message: "The new passwords don't match" };
+            }  
+        }
     } catch (err) {
         console.error('Error: ', err);
         return { success: false, message: 'An internal error occured' };
@@ -39,4 +47,16 @@ async function resetPassword(email, newPassword, repeatNewPassword) {
     }
 }
 
-module.exports = { emailValidator, resetPassword };
+function passwordChecker(password) {
+    if (password.length < 8) {
+        return { success: false, message: "Password must contain at least 8 characters!" };
+    }
+
+    if (!/[A-Z]/.test(password)) {
+        return { success: false, message: "Password must contain at least 1 upper case!" };
+    }
+
+    return 1;
+}
+
+module.exports = { emailValidator, changePassword };
