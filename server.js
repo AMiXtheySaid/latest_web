@@ -5,8 +5,9 @@ const port = 2999;
 
 // import services
 const { signinBtn } = require('./services/login_service');
-const { registerBtn, storeSecretKey } = require('./services/register_service');
-const { emailValidator, changePassword } = require('./services/email_password_service')
+const { registerBtn } = require('./services/register_service');
+const { emailValidator, changePassword } = require('./services/email_password_service');
+const { sign } = require('crypto');
 
 app.use(express.static(path.join(__dirname, './frontend')));
 app.use(express.json());
@@ -41,17 +42,16 @@ app.post('/login', async (req, res) => {
     try {
         const result = await signinBtn(username, password);
 
-        if (result && result.success) {
-            res.status(200).json({ success: true, message: 'Logged in successfully!', token: result.token });
+        if (result.success) {
+            res.status(200).json({ success: result.success, message: 'Logged in successfully!', token: result.data });
         } else {
             console.log(`Login failed: ${result.message}`);
             res.status(400).json({ success: false, message: `${result.message}` });
         }
-    }catch (err) {
+    } catch (err) {
         console.error('Error during login: ', err);
         res.status(500).json({ success: false, message: 'Internal server error' });
     }
-    
 });
 
 app.post('/register', async (req, res) => {
@@ -61,23 +61,15 @@ app.post('/register', async (req, res) => {
         const result = await registerBtn(username, password, email);
 
         if (result.success) {
-            /* --> log in automatically after a successful registration <--
-            const autoLoginResult = await signinBtn(username,password);
-            
-            if (autoLoginResult.success) {
-                res.status(200).json({ success: true, message: 'Successfully registered!\n\tRedirecting...', token: autoLoginResult.token });
-            } else {
-                console.log(`Automatic login failed: ${autoLoginResult.message}`);
-                res.status(500).json({ success: false, message: `Automatic login failed: ${autoLoginResult.message}` });
+            // automatically log you in after a successfull registration
+            const loginRes = await signinBtn(username, password);
+            if (loginRes.success && result.success) {
+                res.status(200).json({ success: true, message: 'Logged in autoatically' });
+            } else if (result.success) {
+                res.status(200).json({ success: true, message: 'Successfully registered!' });
             }
-            // end automatical log in
-            */
-
-           // modifica si tu aici
-           storeSecretKey(username);
-           signinBtn(username, password);
-           res.status(200).json({ success: true, message: 'Successfully registered!' });
-        } else { // bad credentials/ credentials don't meet the requirements/ already taken username
+        } else { 
+            // bad credentials/ credentials don't meet the requirements/ already taken username
             res.status(400).json({ success: false, message: `${result.message}` });
         }
     } catch (err) {
@@ -94,13 +86,6 @@ app.post('/forgot-password', async (req, res) => {
 app.post('/change-password', async (req, res) => {
     const { oldPassword, newPassword, repeatNewPassword } = req.body;
 
-    /*
-    try {
-
-    } catch {
-
-    }
-    */
 })
 
 app.listen(port, () => {
