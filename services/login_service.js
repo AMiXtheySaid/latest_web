@@ -1,6 +1,6 @@
 const { mysql, credentials, fs, logPath, secretKey_credentials } = require('./db_credentials.js');
 const jwt = require('jsonwebtoken');
-const { getPrivateKey, getId } = require('./functions.js');
+const { getPrivateKey } = require('./functions.js');
 
 async function signinBtn(username, password) {
     const pool = mysql.createPool(credentials);

@@ -1,5 +1,4 @@
-const { mysql, credentials, fs, logPath, validator, secretKey_credentials } = require('./db_credentials');
-const crypto = require('crypto');
+const { mysql, credentials, fs, logPath } = require('./db_credentials');
 const { passwordChecker, emailChecker, getId } = require('./functions');
 
 async function registerBtn(username, password, email) {
@@ -7,8 +6,7 @@ async function registerBtn(username, password, email) {
 
     try {
         const con = await pool.getConnection();
-        const [rows] = await con.query('SELECT id FROM users WHERE username = ?', [username]);
-        const returnedId = rows.length > 0 ? rows[0].id : null;
+        const returnedId = await getId(username);
 
         if (returnedId !== null) {
             return { success: false, message: 'Username already taken!' };

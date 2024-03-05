@@ -7,10 +7,14 @@ const port = 2999;
 const { signinBtn } = require('./services/login_service');
 const { registerBtn } = require('./services/register_service');
 const { emailValidator, changePassword } = require('./services/email_password_service');
-const { sign } = require('crypto');
+const { validateData } = require('./services/validateCredentials');
 
 app.use(express.static(path.join(__dirname, './frontend')));
 app.use(express.json());
+
+app.get('/', (req, res) => {
+    res.sendFile(path.resolve(__dirname, './frontend/main_page.html'));
+});
 
 app.get('/home', (req, res) => {
     res.sendFile(path.resolve(__dirname, './frontend/main_page.html'));
@@ -35,6 +39,10 @@ app.get('/about-us', (req, res) => {
 app.get('/change-password', async (req, res) => {
     res.sendFile(path.resolve(__dirname, './frontend/changePassword.html'));
 });
+
+app.get('/forbidden', async (req, res) => {
+    res.sendFile(path.resolve(__dirname, './frontned/forbidden.html'));
+})
 
 app.post('/login', async (req, res) => {
     const { username, password } = req.body;
@@ -75,6 +83,20 @@ app.post('/register', async (req, res) => {
     } catch (err) {
         console.error('Error during register: ', err);
         res.status(500).json({ success: false, message:'Internal server error' });
+    }
+})
+
+app.post('/home', async (req, res) => {
+    const { username, password, token } = req.body;
+
+    try {
+        const validateDataResponse = await validateData(username, password, token);
+
+        if (!validateDataResponse.success) {
+            res.status(401).json({ success: false, message: 'Unauthorized' });
+        }
+    } catch {
+        res.status(500).json({ success: false, message: 'An internal error occured' });
     }
 })
 

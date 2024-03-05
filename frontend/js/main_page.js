@@ -16,7 +16,7 @@ function deleteCookie(name) {
     document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
 }
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', async function() {
     let token = getCookie('myToken');
     const loginProfile = document.getElementById('loginProfile');
     const expandedLoginProfile = document.getElementById('expandedLoginProfile');
@@ -27,6 +27,28 @@ document.addEventListener('DOMContentLoaded', function() {
         isLoggedIn = 1;
     } else {
         isLoggedIn = 0;
+    }
+
+    try {
+        const res = await fetch('http://localhost:2999/register', {
+            method: "POST",
+            headers: {
+                'Content-Type' : 'application/json'
+            },
+            body: JSON.stringify({username, password, token})
+        })
+
+        if (res.ok) {
+            const result = await res.json();
+            if (!result.success) {
+                deleteCookie(token);
+                window.location.replace('/forbidden');
+            }
+        } else {
+            console.error('An error occured during redirecting: ', err);
+        }
+    } catch (err) {
+        console.error('An error occured during redirecting: ', err);
     }
 
     if (isLoggedIn === 0) {

@@ -2,6 +2,7 @@ const logPath = '../logs.txt';
 const mysql = require('mysql2/promise');
 const fs = require('fs/promises');
 const validator = require('validator');
+const jwt = require('jsonwebtoken');
 
 const credentials = {
     host: 'localhost',
@@ -19,4 +20,4 @@ const secretKey_credentials = {
     database: 'secretKey'
 }
 
-module.exports = { mysql, credentials, fs, logPath, validator, secretKey_credentials };
+module.exports = { mysql, credentials, fs, logPath, validator, jwt, secretKey_credentials };
