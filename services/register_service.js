@@ -1,12 +1,12 @@
 const { mysql, credentials, fs, logPath } = require('./db_credentials');
 const { passwordChecker, emailChecker, getId } = require('./functions');
 
-async function registerBtn(username, password, email) {
+async function registerBtn(username, password, email) {  
     const pool = mysql.createPool(credentials);
 
     try {
         const con = await pool.getConnection();
-        const returnedId = await getId(username);
+        var returnedId = (await getId(username)).data;
 
         if (returnedId !== null) {
             return { success: false, message: 'Username already taken!' };
@@ -17,7 +17,7 @@ async function registerBtn(username, password, email) {
             const emailValidation = emailChecker(email);
 
             if (!passwordValidation.success) {
-                return { success: falses, message: passwordValidation.message };
+                return { success: false, message: passwordValidation.message };
             }
             else if (!emailValidation.success) {
                 return { success: false, message: emailValidation.message };
@@ -31,7 +31,7 @@ async function registerBtn(username, password, email) {
             return { success: true, message: 'User successfully created!' }; 
         }
     } catch (err) {
-        console.error('Error: ', err);
+        console.error('Error during Registering: ', err);
         return { success: false, message: 'An error occurred' };
     } finally {
         pool.end();

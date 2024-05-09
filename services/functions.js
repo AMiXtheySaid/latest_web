@@ -1,20 +1,20 @@
-const { secretKey_credentials } = require('./db_credentials');
+const { mysql, credentials, validator, secretKey_credentials, jwt } = require('./db_credentials');
 
 async function getPrivateKey() {
     const pool = mysql.createPool(secretKey_credentials);
 
     try {
         const con = await pool.getConnection();
-        const [rows] = await con.query('SELECT privateKey FROM privatekey LIMIT 1');
+        var [rows] = await con.execute('SELECT privateKey FROM privatekey LIMIT 1');
         const privateKey = rows.length > 0 ? rows[0].privateKey : null;
 
         if (privateKey !== null) {
             return { success: true, data: privateKey };
         } else {
-            return { success: false, message: 'No private key found' };
+            return { success: false, message: 'No private key found', data: null };
         }
     } catch (err) {
-        console.error('Error: ', err);
+        console.error('Error during Private Key obtaining: ', err);
         return { success: false, message: 'An internal error occured' };
     } finally {
         pool.end();
@@ -39,7 +39,11 @@ function emailChecker(email) {
     if (email.length === 0)
         return { success: false, message: 'Email field cannot be left empty!' };
 
-    return { success: validator.isEmail(email), message: 'Invalid email address' };
+    if (validator.isEmail(email)) {
+        return { success: true };
+    } else {
+        return { success: false, message: 'Invalid email address' };
+    }
     
 }
 
@@ -48,15 +52,32 @@ async function getId(username) {
 
     try {
         var con = await pool.getConnection();
-        var [rows] = await con.query("SELECT id FROM users WHERE username = ?", [username]);
-        const returnedId = rows.length > 0 ? rows[0].id : null;
+        var [rows] = await con.execute("SELECT id FROM users WHERE username = ?", [username]);
+        var returnedId = rows.length > 0 ? rows[0].id : null;
 
-        return { success: true, data: returnedId };
+        if (returnedId !== null) {
+            return { success: true, data: returnedId };
+        } else {
+            return { success: false, data: null };
+        }
     } catch (err) {
-        console.log('Error: ', err);
+        console.log('Error during ID obtaining: ', err);
         return { success: false, message: 'An internal error occured' };
     } finally {
         pool.end();
+    }
+}
+
+async function generateToken(id, username, password) {
+    const secretKey = (await getPrivateKey()).data;
+
+    if (secretKey !== null) {
+        var encryptedToken = jwt.sign({ id, username, password }, secretKey);
+        
+        return { success: true, data: encryptedToken };
+    } else {
+        console.log('Error: no secretKey found');
+        return { success: false, message: 'No secret key found!' };
     }
 }
 
@@ -64,4 +85,4 @@ function generateSecretKey() {
     return crypto.randomBytes(32).toString('hex');
 }
 
-module.exports = { getPrivateKey, passwordChecker, emailChecker, getId };
+module.exports = { getPrivateKey, passwordChecker, emailChecker, getId, generateToken };

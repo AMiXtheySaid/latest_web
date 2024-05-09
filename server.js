@@ -4,10 +4,10 @@ const app = express();
 const port = 2999;
 
 // import services
-const { signinBtn } = require('./services/login_service');
-const { registerBtn } = require('./services/register_service');
-const { emailValidator, changePassword } = require('./services/email_password_service');
-const { validateData } = require('./services/validateCredentials');
+const { signinBtn } = require('./services/login_service.js');
+const { registerBtn } = require('./services/register_service.js');
+const { emailValidator, changePassword } = require('./services/email_password_service.js');
+const { validateData, decryptToken } = require('./services/validateCredentials.js');
 
 app.use(express.static(path.join(__dirname, './frontend')));
 app.use(express.json());
@@ -87,12 +87,18 @@ app.post('/register', async (req, res) => {
 })
 
 app.post('/home', async (req, res) => {
-    const { username, password, token } = req.body;
+    const { token } = req.body;
+
+    const decryptedToken = (await decryptToken(token)).data;
+    const username = decryptedToken.username;
+    const password = decryptedToken.password;
 
     try {
-        const validateDataResponse = await validateData(username, password, token);
+        const validateDataResponse = await validateData(username, password);
 
-        if (!validateDataResponse.success) {
+        if (validateDataResponse.success) {
+            res.status(200).json({ success: true, token: token });
+        } else {
             res.status(401).json({ success: false, message: 'Unauthorized' });
         }
     } catch {
@@ -105,9 +111,31 @@ app.post('/forgot-password', async (req, res) => {
     await emailValidator(email);
 })
 
-app.post('/change-password', async (req, res) => {
-    const { oldPassword, newPassword, repeatNewPassword } = req.body;
+app.put('/change-password', async (req, res) => {
+    const { token, oldPassword, newPassword, repeatNewPassword } = req.body;
+    const decryptedToken = (await decryptToken(token)).data;
 
+    const username = decryptedToken.username;
+
+    try {
+        const validateToken = await validateData(username, decryptedToken.password)
+        const oldPasswordCheck = await validateData(username, oldPassword);
+
+        if (oldPasswordCheck.success && validateToken.success) {
+            const result = await changePassword(username, newPassword, repeatNewPassword);
+
+            if (result.success) {
+                const newToken = result.data;
+                res.status(200).json({ success: true, message: result.message, token: newToken });
+            } else {
+                res.status(400).json({ success: false, message: result.message });
+            }
+        } else {
+            res.status(400).json({ success: false, message: oldPasswordCheck.message });
+        }
+    } catch {
+        res.status(401).json({ success: false, message: "Unauthorized" });
+    }
 })
 
 app.listen(port, () => {

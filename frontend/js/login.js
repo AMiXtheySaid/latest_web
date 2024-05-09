@@ -1,14 +1,3 @@
-// $('.message a').click(function(){
-//     $('form').animate({height: 'toggle', opacity: 'toggle'}, "slow");
-// });
-
-function setCookie(name, value, days) {
-    const expirationDate = new Date();
-    expirationDate.setDate(expirationDate.getDate() + days);
-
-    document.cookie = `${name}=${value}; expires=${expirationDate.toUTCString()}; path=/`;
-}
-
 document.getElementById("loginBtn").onclick = async function() {
     const username = document.querySelector('#log_usernameBox').value;
     const password = document.querySelector('#log_passwordBox').value;

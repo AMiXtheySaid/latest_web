@@ -1,57 +1,40 @@
-function getCookie(name) {
-    var cookies = document.cookie.split('; ');
-
-    for (var cookie of cookies) {
-        var [cookieName, cookieValue] = cookie.split('=');
-
-        if (cookieName === name) {
-            return cookieValue;
-        }
-    }
-
-    return null;
-}
-
-function deleteCookie(name) {
-    document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
-}
-
 document.addEventListener('DOMContentLoaded', async function() {
-    let token = getCookie('myToken');
+    var token = getCookie('myToken');
     const loginProfile = document.getElementById('loginProfile');
     const expandedLoginProfile = document.getElementById('expandedLoginProfile');
-    let isLoggedIn
+    var isLoggedIn;
 
-    // verifica aici token ul sa fie OK
+    // verifici ca tokenu sa fie ce trebe
+    
     if (token !== null) {
-        isLoggedIn = 1;
-    } else {
-        isLoggedIn = 0;
-    }
-
-    try {
-        const res = await fetch('http://localhost:2999/register', {
+        try {
+        const res = await fetch('/home', {
             method: "POST",
             headers: {
                 'Content-Type' : 'application/json'
             },
-            body: JSON.stringify({username, password, token})
+            body: JSON.stringify({token})
         })
 
         if (res.ok) {
             const result = await res.json();
-            if (!result.success) {
+
+            if (result.success) {
+                isLoggedIn = true;
+            } else {
+                isLoggedIn = false;
                 deleteCookie(token);
-                window.location.replace('/forbidden');
+                window.location.replace('/forbidden');            
             }
         } else {
             console.error('An error occured during redirecting: ', err);
         }
-    } catch (err) {
-        console.error('An error occured during redirecting: ', err);
+        } catch (err) {
+            console.error('An error occured during redirecting: ', err);
+        }
     }
-
-    if (isLoggedIn === 0) {
+    
+    if (!isLoggedIn) {
         loginProfile.textContent = 'Login';
         expandedLoginProfile.style.display = 'none';
     } else {
@@ -60,7 +43,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     }
 
     loginProfile.onclick = function() {
-        if (isLoggedIn === 0) {
+        if (!isLoggedIn) {
             window.location.replace('/login');
         } else {
             if (expandedLoginProfile.style.display === 'none') {
