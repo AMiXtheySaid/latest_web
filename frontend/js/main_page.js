@@ -1,8 +1,10 @@
+var isLoggedIn;
+var username;
+
 document.addEventListener('DOMContentLoaded', async function() {
     var token = getCookie('myToken');
     const loginProfile = document.getElementById('loginProfile');
     const expandedLoginProfile = document.getElementById('expandedLoginProfile');
-    var isLoggedIn;
     
     if (token !== null) {
         try {
@@ -19,24 +21,26 @@ document.addEventListener('DOMContentLoaded', async function() {
 
             if (result.success) {
                 isLoggedIn = true;
+                username = result.data;
             } else {
                 isLoggedIn = false;
                 deleteCookie(token);
                 window.location.replace('/forbidden');            
             }
         } else {
-            console.error('An error occured during redirecting: ', err);
+            console.error('An error occurred during redirecting: ', err);
         }
         } catch (err) {
             console.error('An error occured during redirecting: ', err);
         }
     }
     
+    // what does the button display
     if (!isLoggedIn) {
         loginProfile.textContent = 'Login';
         expandedLoginProfile.style.display = 'none';
     } else {
-        loginProfile.textContent = 'Profile';
+        loginProfile.textContent = username;
         expandedLoginProfile.style.display = 'block';
     }
 

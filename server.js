@@ -70,15 +70,8 @@ app.post('/register', async (req, res) => {
         const result = await registerBtn(username, password, email);
 
         if (result.success) {
-            // automatically log you in after a successfull registration
-            const loginRes = await signinBtn(username, password);
-            if (loginRes.success && result.success) {
-                res.status(200).json({ success: true, message: 'Logged in autoatically' });
-            } else if (result.success) {
-                res.status(200).json({ success: true, message: 'Successfully registered!' });
-            }
+            res.status(200).json({ success: true, message: 'Successfully registered' });
         } else { 
-            // bad credentials/ credentials don't meet the requirements/ already taken username
             res.status(400).json({ success: false, message: `${result.message}` });
         }
     } catch (err) {
@@ -98,12 +91,12 @@ app.post('/home', async (req, res) => {
         const validateDataResponse = await validateData(username, password);
 
         if (validateDataResponse.success) {
-            res.status(200).json({ success: true, token: token });
+            res.status(200).json({ success: true, token: token, data: username });
         } else {
             res.status(401).json({ success: false, message: 'Unauthorized' });
         }
     } catch {
-        res.status(500).json({ success: false, message: 'An internal error occured' });
+        res.status(500).json({ success: false, message: 'An internal error occurred' });
     }
 })
 
