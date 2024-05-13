@@ -138,6 +138,12 @@ app.put('/change-password', async (req, res) => {
     }
 })
 
+app.delete('/delete-account', async (req, res) => {
+    const { token } = req.body;
+
+    
+})
+
 app.listen(port, () => {
     console.log(`Web listening to port ${port}`);
 });
