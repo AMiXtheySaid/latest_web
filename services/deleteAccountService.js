@@ -6,12 +6,17 @@ async function deleteAccount(username) {
 
     try {
         const con = await pool.getConnection();
-
         const returnedId = (await getId(username)).data;
 
         con.execute('DELETE FROM users WHERE id = ?', [returnedId]);
+
+        return { success: true, message: 'User successfully deleted' };
     } catch (err) {
         console.log('Error during Account Deletion: ', err);
         return { success: false, message: "An internal error occured" };
+    } finally {
+        pool.end();
     }
 }
+
+module.exports = { deleteAccount };

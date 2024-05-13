@@ -3,8 +3,6 @@ document.addEventListener('DOMContentLoaded', async function() {
     const loginProfile = document.getElementById('loginProfile');
     const expandedLoginProfile = document.getElementById('expandedLoginProfile');
     var isLoggedIn;
-
-    // verifici ca tokenu sa fie ce trebe
     
     if (token !== null) {
         try {
@@ -73,4 +71,36 @@ document.getElementById('logOut').onclick = async function() {
 
 document.getElementById('changePassword').onclick = function() {
     window.location.replace('/change-password');
+}
+
+document.getElementById('deleteAccount').onclick = async function() {
+    var token = getCookie('myToken');
+    const areYouSure = confirm('Are you sure want to delete this account?');
+
+    if (areYouSure) {
+        try {
+            const res = await fetch('/delete-account', {
+                method: "DELETE",
+                headers: {
+                    'Content-Type' : 'application/json'
+                },
+                body: JSON.stringify({token})
+            })
+    
+            if (res.ok) {
+                const result = await res.json();
+    
+                if (result.success) {
+                    deleteCookie('myToken');
+                    isLoggedIn = false;
+                    window.location.replace('/home');
+                }
+            }
+        } catch (err) {
+            console.log('An error occured during Account deletion: ', err);
+        }
+    } else {
+        window.location.replace('/home');
+    }
+    
 }

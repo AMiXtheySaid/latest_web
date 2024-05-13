@@ -8,6 +8,7 @@ const { signinBtn } = require('./services/login_service.js');
 const { registerBtn } = require('./services/register_service.js');
 const { emailValidator, changePassword } = require('./services/email_password_service.js');
 const { validateData, decryptToken } = require('./services/validateCredentials.js');
+const { deleteAccount } = require('./services/deleteAccountService.js');
 
 app.use(express.static(path.join(__dirname, './frontend')));
 app.use(express.json());
@@ -141,7 +142,16 @@ app.put('/change-password', async (req, res) => {
 app.delete('/delete-account', async (req, res) => {
     const { token } = req.body;
 
+    const decryptedToken = (await decryptToken(token)).data;
+    const username = decryptedToken.username;
+
+    const result = await deleteAccount(username);
     
+    if (result.success) {
+        res.status(200).json({ success: true, message: "User successfully deleted" });
+    } else {
+        res.status(401).json({ success: false, message: 'Unauthorised' });
+    }
 })
 
 app.listen(port, () => {
