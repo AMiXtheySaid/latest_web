@@ -45,6 +45,10 @@ app.get('/forbidden', async (req, res) => {
     res.sendFile(path.resolve(__dirname, './frontned/forbidden.html'));
 })
 
+app.get('/delete-account', async (req, res) => {
+    res.sendFile(path.resolve(__dirname, './frontend/deleteAccount.html'));
+})
+
 app.post('/login', async (req, res) => {
     const { username, password } = req.body;
 
@@ -133,18 +137,23 @@ app.put('/change-password', async (req, res) => {
 })
 
 app.delete('/delete-account', async (req, res) => {
-    const { token } = req.body;
+    const { token, password } = req.body;
 
     const decryptedToken = (await decryptToken(token)).data;
     const username = decryptedToken.username;
-
-    const result = await deleteAccount(username);
     
-    if (result.success) {
-        res.status(200).json({ success: true, message: "User successfully deleted" });
+    if (password === decryptedToken.password) {
+        const result = await deleteAccount(username);
+    
+        if (result.success) {
+            res.status(200).json({ success: true, message: "User successfully deleted" });
+        } else {
+            res.status(401).json({ success: false, message: 'Unauthorised' });
+        }
     } else {
-        res.status(401).json({ success: false, message: 'Unauthorised' });
+        res.status(400).json({ success: false, message: "Wrong Password" });
     }
+
 })
 
 app.listen(port, () => {
