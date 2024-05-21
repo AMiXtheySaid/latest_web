@@ -1,7 +1,6 @@
-document.getElementById('.deleteAccountBtn').onclick = async function() {
-    const password = document.querySelector('#passwordBox').value;
-
-    var token = getCookie('myToken');
+document.getElementById('deleteAccountBtn').onclick = async function() {
+    var password = document.querySelector('#passwordField').value;
+    const token = getCookie('myToken');
 
     try {
         const res = await fetch('delete-account', {
@@ -31,6 +30,6 @@ document.getElementById('.deleteAccountBtn').onclick = async function() {
     }
 }
 
-document.getElementById('.goBackBtn').onclick = function() {
+document.getElementById('goBackBtn').onclick = function() {
     window.location.replace('/home');
 }
