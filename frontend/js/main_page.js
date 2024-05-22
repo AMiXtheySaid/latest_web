@@ -1,70 +1,75 @@
-var isLoggedIn;
-var username;
-
 document.addEventListener('DOMContentLoaded', async function() {
     var token = getCookie('myToken');
+
     const loginProfile = document.getElementById('loginProfile');
-    const expandedLoginProfile = document.getElementById('expandedLoginProfile');
+    const dropdownContent = document.querySelector('.dropdownContent');
+
+    var isLoggedIn = false;
+    var username = null;
     
     if (token !== null) {
         try {
-        const res = await fetch('/home', {
-            method: "POST",
-            headers: {
-                'Content-Type' : 'application/json'
-            },
-            body: JSON.stringify({token})
-        })
+            const res = await fetch('/home', {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ token })
+            });
 
-        if (res.ok) {
-            const result = await res.json();
+            if (res.ok) {
+                const result = await res.json();
 
-            if (result.success) {
-                isLoggedIn = true;
-                username = result.data;
+                if (result.success) {
+                    username = result.data;
+                    isLoggedIn = true;
+                } else {
+                    isLoggedIn = false;
+                    deleteCookie('myToken');
+                    window.location.replace('/forbidden');            
+                }
             } else {
-                isLoggedIn = false;
-                deleteCookie(token);
-                window.location.replace('/forbidden');            
+                console.error('An error occurred during redirecting: ', res.statusText);
             }
-        } else {
+        } catch (err) {
             console.error('An error occurred during redirecting: ', err);
         }
-        } catch (err) {
-            console.error('An error occured during redirecting: ', err);
-        }
-    }
-    
-    // what does the button display
-    if (!isLoggedIn) {
-        loginProfile.textContent = 'Login';
-        expandedLoginProfile.style.display = 'none';
+    } 
+
+    if (isLoggedIn) {
+        loginProfile.innerText = username;
+        loginProfile.addEventListener('mouseenter', function() {
+            dropdownContent.style.display = 'block';
+        });
+
+        loginProfile.addEventListener('mouseleave', function() {
+            dropdownContent.style.display = 'none';
+        });
+
+        dropdownContent.addEventListener('mouseenter', function() {
+            dropdownContent.style.display = 'block';
+        });
+
+        dropdownContent.addEventListener('mouseleave', function() {
+            dropdownContent.style.display = 'none';
+        });
+
     } else {
-        loginProfile.textContent = username;
-        expandedLoginProfile.style.display = 'block';
-    }
-
-    loginProfile.onclick = function() {
-        if (!isLoggedIn) {
-            window.location.replace('/login');
-        } else {
-            if (expandedLoginProfile.style.display === 'none') {
-                expandedLoginProfile.style.display = 'block';
-            } else {
-                expandedLoginProfile.style.display = 'none';
+        loginProfile.innerText = 'Login';
+        loginProfile.onclick = function() {
+            if (!isLoggedIn) {
+                window.location.replace('/login');
             }
-        }
+        };
     }
 
-    //on load properties
-    expandedLoginProfile.style.display = 'none';
-})
+});
 
-document.getElementById('contact').onclick = async function() {
+document.getElementById('contact').onclick = function() {
     window.location.replace('/contact');
 }
 
-document.getElementById('aboutUs').onclick = async function() {
+document.getElementById('aboutUs').onclick = function() {
     window.location.replace('/about-us');
 }
 

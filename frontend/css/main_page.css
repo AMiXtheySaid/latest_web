@@ -4,30 +4,26 @@ body {
     margin: 0;
     font-family: Arial, Helvetica, sans-serif;
     background-size: cover;
+    font-size: 16px;
 }
 
 .navbar {
     background-color: #6039BC;
-    max-height: 3rem;
     max-width: 100%;
-}
-
-.navbar ul{
-    list-style-type: none;
-    padding: 0;
     overflow: hidden;
-    margin: 0;
+    display: flex;
+    justify-content: flex-end;
+    max-height: 3rem;
 }
 
 .navbar button {
     color: black;
     text-decoration: none;
     padding: 1rem;
-    display: block;
-    text-align: center;
     background-color: transparent;
     border: none;
     margin: 0;
+    cursor: pointer;
 }
 
 .navbar button:hover {
@@ -35,37 +31,37 @@ body {
     background-color: #5C63C7;
 }
 
-.navbar li {
-    float: right;
-    position: relative;
-}
-
-.expanded_login_profile {
-    display: none;
-    padding: 0;
+.dropdown .dropdown {
     margin: 0;
-    list-style-type: none;
-    border: none;
-    top: 100%;
-    width: 100%;
+    font-family: inherit;
 }
 
-.expanded_login_profile button {
-    display: block;
-    width: 100%;
-    text-align: center;
-    padding: 1rem;
-    border: none;
-    background-color: transparent;
+.dropdown {
+    float: left;
+    overflow: hidden;
+}
+
+.dropdownContent {
+    display: none;
+    position: absolute;
+    top: 0;
+    background-color: #6039BC;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 2;
+    top: calc(3rem - 1px); 
+}
+
+.dropdownContent button {
     color: black;
+    padding: 1rem;
+    text-align: center;
+    text-decoration: none;
+    border: none;
+    background-color: #6039BC;
+    width: 100%;
 }
 
-.expanded_login_profile button:hover {
-    color: #a481f5;
+.dropdownContent button:hover {
     background-color: #5C63C7;
-}
-
-.error-message {
-    color: #ff0000;
-    margin-top: 0.7rem;
+    color: #a481f5;
 }

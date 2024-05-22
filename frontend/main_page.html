@@ -8,24 +8,27 @@
 </head>
 <body>
 
-    <nav class="navbar">
-        <ul>
-            <li>
-                <button id="loginProfile"></button>
-                <ul id="expandedLoginProfile" class="expanded_login_profile">
-                    <li><button id="logOut">Log out</button></li>
-                    <li><button id="changePassword">Change Password</button></li>
-                    <li><button id="deleteAccount">Delete account</button></li>
-                </ul>
-            </li>
-            <li><button id="aboutUs">About us</button></li>
-            <li><button id="contact">Contact</button></li>
-        </ul>
-    </nav>
+    <div class="navbar">
+        <!-- The Dropdown -->
+        <div class="dropdown">
+            <!-- the profile button which expands -->
+            <button id="loginProfile" class="dropdownBtn"></button> 
 
+            <!-- The content inside the Dropdown -->
+            <div class="dropdownContent">
+                <button id="goToCart">Cart</button>
+                <button id="logOut">Log Out</button>
+                <button id="changePassword">Change Password</button>
+                <button id="deleteAccount">Delete Account</button>
+            </div>
+        </div>
+
+        <!-- Outside Dropdown -->
+        <button id="contact">Contact</button>
+        <button id="aboutUs">About Us</button>
+    </div>
+
+    <script type="text/javascript" src="./js/cookies.js"></script>
+    <script type="text/javascript" src="./js/main_page.js"></script>
 </body>
-
-<script type="text/javascript" src="./js/cookies.js"></script>
-<script rel="text/javascript" src="js/main_page.js"></script>
-
 </html>
