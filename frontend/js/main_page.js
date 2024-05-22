@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     const loginProfile = document.getElementById('loginProfile');
     const dropdownContent = document.querySelector('.dropdownContent');
+    const pictureContainer = document.getElementById('pictureContainerBox');
 
     var isLoggedIn = false;
     var username = null;
@@ -63,6 +64,30 @@ document.addEventListener('DOMContentLoaded', async function() {
         };
     }
 
+    // load the page
+    try {
+        const res = await fetch('/home', {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ })
+        });
+
+        if (res.ok) {
+            const result = await res.json();
+
+            if (result.success) {
+                // load the pictures
+            } else {
+                console.error("Error retrieving pictures from the database");         
+            }
+        } else {
+            console.error('An error occurred during redirecting: ', res.statusText);
+        }
+    } catch (err) {
+        console.error('An error occurred during redirecting: ', err);
+    }
 });
 
 document.getElementById('contact').onclick = function() {

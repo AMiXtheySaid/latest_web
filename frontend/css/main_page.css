@@ -45,12 +45,10 @@ body {
 .dropdownContent {
     display: none;
     position: absolute;
-    top: calc(3rem - 1px); 
+    animation: expansion 0.5s linear forwards;
     background-color: #6039BC;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    transition: height 0.2s ease-in-out;
     z-index: 1;
-    
 }
 
 .dropdownContent button {
@@ -66,4 +64,45 @@ body {
 .dropdownContent button:hover {
     background-color: #5C63C7;
     color: #a481f5;
+}
+
+@keyframes expansion {
+    0%, 50%,100% {
+        top: calc(3rem - 1px);
+    }
+}
+
+.pictureContainer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    padding: 1rem;
+    margin: 0 auto;
+    max-width: 100%;
+    justify-content: center;
+}
+
+.picture-box {
+    background-color: transparent;
+    border: 1px solid white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, .1);
+    flex: 1 1 calc(33.333% - 1rem);
+    box-sizing: border-box;
+}
+
+.picture-box img {
+    width: 100%;
+    height: auto;
+}
+
+@media (max-width: 800px) {
+    .picture-box {
+        flex: 1 1 calc(50% - 1rem);
+    }
+}
+
+@media (max-width: 500px) {
+    .picture-box {
+        flex: 1 1 calc(100% - 1rem);
+    }
 }
