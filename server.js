@@ -49,6 +49,14 @@ app.get('/delete-account', async (req, res) => {
     res.sendFile(path.resolve(__dirname, './frontend/deleteAccount.html'));
 })
 
+app.get('/appointments', async (req, res) => {
+    res.sendFile(path.resolve(__dirname, './frontend/appointments.html'));
+})
+
+app.get('/past-appointments', async (req, res) => {
+    res.sendFile(path.resolve(__dirname, './frontend/pastAppointments.html'));
+})
+
 app.post('/login', async (req, res) => {
     const { username, password } = req.body;
 
@@ -68,10 +76,10 @@ app.post('/login', async (req, res) => {
 });
 
 app.post('/register', async (req, res) => {
-    const { username, password, email } = req.body;
+    const { username, password, email, phone } = req.body;
 
     try {
-        const result = await registerBtn(username, password, email);
+        const result = await registerBtn(username, password, email, phone);
 
         if (result.success) {
             res.status(200).json({ success: true, message: 'Successfully registered' });
@@ -154,6 +162,12 @@ app.delete('/delete-account', async (req, res) => {
         res.status(400).json({ success: false, message: "Wrong Password" });
     }
 
+})
+
+app.post('/doctors', async (req, res) => {
+    const doctors = (await getDoctors()).data;
+
+    res.status(200).json({ success: true, data: doctors });
 })
 
 app.listen(port, () => {

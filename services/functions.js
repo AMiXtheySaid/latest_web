@@ -47,6 +47,16 @@ function emailChecker(email) {
     
 }
 
+function phoneChecker(phone) {
+    var phonePattern = /^(?:(?:\+|00)40|0)\d{9}$/;
+
+    if (phonePattern.test(phone)) {
+        return { success: true };
+    } else {
+        return { success: false, message: 'Invalid phone number' };
+    }
+}
+
 async function getId(username) {
     let pool = mysql.createPool(credentials);
 
@@ -85,4 +95,4 @@ function generateSecretKey() {
     return crypto.randomBytes(32).toString('hex');
 }
 
-module.exports = { getPrivateKey, passwordChecker, emailChecker, getId, generateToken };
+module.exports = { getPrivateKey, passwordChecker, emailChecker, getId, generateToken, phoneChecker };

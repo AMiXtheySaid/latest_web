@@ -1,7 +1,7 @@
 const { mysql, credentials, fs, logPath } = require('./db_credentials');
-const { passwordChecker, emailChecker, getId } = require('./functions');
+const { passwordChecker, emailChecker, getId, phoneChecker } = require('./functions');
 
-async function registerBtn(username, password, email) {  
+async function registerBtn(username, password, email, phone) {  
     const pool = mysql.createPool(credentials);
 
     try {
@@ -16,16 +16,17 @@ async function registerBtn(username, password, email) {
             const passwordValidation = passwordChecker(password);
             const emailValidation = emailChecker(email);
 
-            if (!passwordValidation.success) {
+            if (!phoneChecker(phone).success) {
+                return { success: false, message: phoneChecker(phone).message };
+            } else if (!passwordValidation.success) {
                 return { success: false, message: passwordValidation.message };
-            }
-            else if (!emailValidation.success) {
+            } else if (!emailValidation.success) {
                 return { success: false, message: emailValidation.message };
             }
 
             const joinDate = new Date();
             const formattedJoinDate = joinDate.toISOString().slice(0, 19).replace('T', ' ');
-            await con.execute('INSERT INTO Users (username, password, email, join_date) VALUES (?, ?, ?, ?)', [username, password, email, formattedJoinDate]);
+            await con.execute('INSERT INTO Users (username, password, email, join_date, phone) VALUES (?, ?, ?, ?, ?)', [username, password, email, formattedJoinDate, phone]);
             await fs.appendFile(logPath, `${joinDate}: User ${username} successfully created\n`);
 
             return { success: true, message: 'User successfully created!' }; 

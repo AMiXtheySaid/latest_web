@@ -2,6 +2,7 @@ document.getElementById("registerBtn").onclick = async function () {
     const username = document.querySelector('#reg_usernameBox').value;
     const password = document.querySelector('#reg_passwordBox').value;
     const email = document.querySelector('#reg_emailBox').value;
+    const phone = document.querySelector('#reg_phoneBox').value;
 
     var successfullyRegistered = false;
     try {
@@ -10,7 +11,7 @@ document.getElementById("registerBtn").onclick = async function () {
             headers: {
                 'Content-Type' : 'application/json'
             },
-            body: JSON.stringify({username, password, email})
+            body: JSON.stringify({username, password, email, phone})
         })
 
         if (res.ok) {

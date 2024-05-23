@@ -110,3 +110,11 @@ document.getElementById('changePassword').onclick = function() {
 document.getElementById('deleteAccount').onclick = function() {
     window.location.replace('/delete-account');
 }
+
+document.getElementById('makeAnAppointment').onclick = function() {
+    window.location.replace('/appointments');
+}
+
+document.getElementById('goToAppointments').onclick = function() {
+    window.location.replace('/past-appointments');
+}
