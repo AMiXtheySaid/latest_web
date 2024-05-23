@@ -9,10 +9,12 @@ const { registerBtn } = require('./services/register_service.js');
 const { emailValidator, changePassword } = require('./services/email_password_service.js');
 const { validateData, decryptToken } = require('./services/validateCredentials.js');
 const { deleteAccount } = require('./services/deleteAccountService.js');
+const { getDoctors, getServices } = require('./services/getServicesDoctorsService.js');
 
 app.use(express.static(path.join(__dirname, './frontend')));
 app.use(express.json());
 
+// app.get
 app.get('/', (req, res) => {
     res.sendFile(path.resolve(__dirname, './frontend/main_page.html'));
 });
@@ -57,6 +59,7 @@ app.get('/past-appointments', async (req, res) => {
     res.sendFile(path.resolve(__dirname, './frontend/pastAppointments.html'));
 })
 
+// app.post
 app.post('/login', async (req, res) => {
     const { username, password } = req.body;
 
@@ -165,9 +168,17 @@ app.delete('/delete-account', async (req, res) => {
 })
 
 app.post('/doctors', async (req, res) => {
-    const doctors = (await getDoctors()).data;
+    const service = req.body;
+    const returnedDoctors = (await getDoctors(service)).data;
 
-    res.status(200).json({ success: true, data: doctors });
+    res.status(200).json({ success: true, data: returnedDoctors });
+})
+
+app.post('/services', async (req, res) => {
+    const doctor = req.body;
+    const returnedServices = (await getServices(doctor)).data;
+
+    res.status(200).json({ success: true, data: returnedServices });
 })
 
 app.listen(port, () => {

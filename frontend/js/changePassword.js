@@ -14,7 +14,7 @@ document.getElementById('changePasswordBtn').onclick = async function() {
             headers: {
                 'Content-Type' : 'application/json'
             },
-            body: JSON.stringify({token, oldPassword, newPassword, repeatNewPassword})
+            body: JSON.stringify({ token, oldPassword, newPassword, repeatNewPassword })
         })
 
         if (res.ok) {

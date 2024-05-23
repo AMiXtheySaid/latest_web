@@ -6,12 +6,12 @@ document.getElementById("registerBtn").onclick = async function () {
 
     var successfullyRegistered = false;
     try {
-        const res = await fetch('http://localhost:2999/register', {
+        const res = await fetch('/register', {
             method: "POST",
             headers: {
                 'Content-Type' : 'application/json'
             },
-            body: JSON.stringify({username, password, email, phone})
+            body: JSON.stringify({ username, password, email, phone })
         })
 
         if (res.ok) {
@@ -39,7 +39,7 @@ document.getElementById("registerBtn").onclick = async function () {
                 headers: {
                     'Content-Type' : 'application/json'
                 },
-                body: JSON.stringify({username, password})
+                body: JSON.stringify({ username, password })
             })
     
             if (res.ok) {

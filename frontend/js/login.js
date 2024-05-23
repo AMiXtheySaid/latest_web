@@ -8,7 +8,7 @@ document.getElementById("loginBtn").onclick = async function() {
             headers: {
                 'Content-Type' : 'application/json'
             },
-            body: JSON.stringify({username, password})
+            body: JSON.stringify({ username, password })
         })
 
         if (res.ok) {
@@ -48,7 +48,7 @@ document.getElementById('forgotPasswordBtn').onclick = async function() {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({email})
+            body: JSON.stringify({ email })
         })
 
         if (res.ok) {

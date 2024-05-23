@@ -8,7 +8,7 @@ document.getElementById('deleteAccountBtn').onclick = async function() {
             headers: {
                 'Content-Type' : 'application/json'
             },
-            body: JSON.stringify({token, password})
+            body: JSON.stringify({ token, password })
         })
 
         if (res.ok) {
