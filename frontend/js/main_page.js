@@ -71,7 +71,6 @@ document.addEventListener('DOMContentLoaded', async function() {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ })
         });
 
         if (res.ok) {
