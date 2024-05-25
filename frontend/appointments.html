@@ -9,7 +9,8 @@
 <body>
     <div>
         <form>
-            <input type="date" id="dateBox" class="dateBox">
+            <input type="date" id="dateBox" class="dateBox" required>
+            
             <select id="doctorBox" required>
                 <option value="" disabled selected>Select the doctor</option>
             </select>
@@ -17,8 +18,11 @@
                 <option value="" disabled selected>Select the problem</option>
             </select>
         </form>
+
+        <button type="button" id="getAnAppointment">Get an Appointment</button>
     </div>
 
     <script type="text/javascript" src="./js/cookies.js"></script>
-    <script type="text/javascript" src="./js/appointments.js"></script></body>
+    <script type="text/javascript" src="./js/appointments.js"></script>
+</body>
 </html>

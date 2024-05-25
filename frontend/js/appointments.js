@@ -1,6 +1,6 @@
 async function getDoctors(service) {
     try {
-        const res = await fetch('/doctors', {
+        const res = await fetch('/appointments', {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json'
@@ -11,12 +11,13 @@ async function getDoctors(service) {
         if (res.ok) {
             const result = await res.json();
             const doctorDropdown = document.getElementById('doctorBox');
+            doctorDropdown.innerHTML = '<option value="" disabled selected>Select the doctor</option>';
 
-            result.forEach(person => {
+            result.forEach(doctor => {
                 const option = document.createElement('option');
 
-                option.value = `${person.surname} ${person.name}`;
-                option.text = `${person.surname} ${person.name}`;
+                option.value = `${doctor}`;
+                option.text = `${doctor}`;
 
                 doctorDropdown.appendChild(option);
             })
@@ -26,11 +27,13 @@ async function getDoctors(service) {
     } catch (err) {
         console.error('An error occurred while retrieving the doctors ', err);
     }
+
+
 }
 
 async function getServices(doctor) {
     try {
-        const res = await fetch('/services', {
+        const res = await fetch('/appointments', {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json'
@@ -41,12 +44,13 @@ async function getServices(doctor) {
         if (res.ok) {
             const result = await res.json();
             const serviceDropdown = document.getElementById('serviceBox');
+            doctorDropdown.innerHTML = '<option value="" disabled selected>Select the doctor</option>';
 
             result.forEach(service => {
                 const option = document.createElement('option');
 
-                option.value = `${service.name}`;
-                option.text = `${service.name}`;
+                option.value = `${service}`;
+                option.text = `${service}`;
 
                 serviceDropdown.appendChild(option);
             })
@@ -63,20 +67,56 @@ document.addEventListener('DOMContentLoaded', async function() {
     const serviceBox = document.getElementById('serviceBox');
 
     // on load
-    doctorBox.value = 'Select a doctor';
-    serviceBox.value = 'Select a service';
+    await getDoctors(null);
+    await getServices(null);
 
     // checking for doctors and services
-    if (doctorBox.value === 'Select a doctor' && serviceBox.value === 'Select a service') {
-        getDoctors(null);
-        getServices(null);
-    } else if (doctorBox.value !== 'Select a doctor') {
-        getServices(doctorBox.value);
-    } else if (serviceBox.value !== 'Select a service') {
-        getServices(serviceBox.value);
-    }
+    doctorBox.addEventListener('change', async function() {
+        if (doctorBox.value) {
+            await getServices(doctorBox.value);
+        }
+    });
+
+    serviceBox.addEventListener('change', async function() {
+        if (serviceBox.value) {
+            await getDoctors(serviceBox.value);
+        }
+    });
+
 })
 
-document.getElementById('getAppointment').onclick = async function() {
+document.getElementById('getAnAppointment').onclick = async function() {
+    var need = false;
+    try {
+        const res = await fetch('/doctors', {
+            method: "POST",
+            headers: {
+                'Content-Type' : 'application/json'
+            },
+        })
 
+        if (res.ok) {
+            const result = await res.json();
+            const doctorDropdown = document.getElementById('doctorBox');
+            doctorDropdown.innerHTML = '<option value="" disabled selected>Select the doctor</option>';
+
+            result.forEach(doctor => {
+                const option = document.createElement('option');
+
+                option.value = `${doctor}`;
+                option.text = `${doctor}`;
+
+                doctorDropdown.appendChild(option);
+            })
+        } else {
+            console.error('An error occurred while retrieving the doctors');
+        }
+    } catch (err) {
+        need = true;
+        console.log('An error occurred while retrieving the doctors ', err);
+    }
+
+    if (need) {
+        alert('no')
+    }
 }

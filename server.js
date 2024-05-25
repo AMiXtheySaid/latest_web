@@ -9,7 +9,8 @@ const { registerBtn } = require('./services/register_service.js');
 const { emailValidator, changePassword } = require('./services/email_password_service.js');
 const { validateData, decryptToken } = require('./services/validateCredentials.js');
 const { deleteAccount } = require('./services/deleteAccountService.js');
-const { getDoctors, getServices } = require('./services/getServicesDoctorsService.js');
+const { getServices } = require('./services/getServicesService.js');
+const { getDoctors } = require('./services/getDoctorsService.js')
 
 app.use(express.static(path.join(__dirname, './frontend')));
 app.use(express.json());
@@ -168,17 +169,18 @@ app.delete('/delete-account', async (req, res) => {
 })
 
 app.post('/doctors', async (req, res) => {
-    const service = req.body;
-    const returnedDoctors = (await getDoctors(service)).data;
+    const { service } = req.body;
+    const returnedDoctors = await getDoctors(service);
 
-    res.status(200).json({ success: true, data: returnedDoctors });
+    console.log(returnedDoctors)
+    res.status(200).json({ returnedDoctors });
 })
 
 app.post('/services', async (req, res) => {
-    const doctor = req.body;
+    const { doctor } = req.body;
     const returnedServices = (await getServices(doctor)).data;
 
-    res.status(200).json({ success: true, data: returnedServices });
+    res.status(200).json({ returnedServices });
 })
 
 app.listen(port, () => {
