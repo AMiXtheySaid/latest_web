@@ -1,7 +1,7 @@
 async function getDoctors(service) {
     try {
-        const res = await fetch('/appointments', {
-            method: "POST",
+        const res = await fetch('/doctors', {
+            method: "GET",
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -27,14 +27,12 @@ async function getDoctors(service) {
     } catch (err) {
         console.error('An error occurred while retrieving the doctors ', err);
     }
-
-
 }
 
 async function getServices(doctor) {
     try {
-        const res = await fetch('/appointments', {
-            method: "POST",
+        const res = await fetch('/services', {
+            method: "GET",
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -43,62 +41,8 @@ async function getServices(doctor) {
 
         if (res.ok) {
             const result = await res.json();
-            const serviceDropdown = document.getElementById('serviceBox');
-            doctorDropdown.innerHTML = '<option value="" disabled selected>Select the doctor</option>';
-
-            result.forEach(service => {
-                const option = document.createElement('option');
-
-                option.value = `${service}`;
-                option.text = `${service}`;
-
-                serviceDropdown.appendChild(option);
-            })
-        } else {
-            console.error('An error occurred while retrieving the services');
-        }
-    } catch (err) {
-        console.error('An error occurred while retrieving the services ', err);
-    }
-}
-
-document.addEventListener('DOMContentLoaded', async function() {
-    const doctorBox = document.getElementById('doctorBox');
-    const serviceBox = document.getElementById('serviceBox');
-
-    // on load
-    await getDoctors(null);
-    await getServices(null);
-
-    // checking for doctors and services
-    doctorBox.addEventListener('change', async function() {
-        if (doctorBox.value) {
-            await getServices(doctorBox.value);
-        }
-    });
-
-    serviceBox.addEventListener('change', async function() {
-        if (serviceBox.value) {
-            await getDoctors(serviceBox.value);
-        }
-    });
-
-})
-
-document.getElementById('getAnAppointment').onclick = async function() {
-    var need = false;
-    try {
-        const res = await fetch('/doctors', {
-            method: "POST",
-            headers: {
-                'Content-Type' : 'application/json'
-            },
-        })
-
-        if (res.ok) {
-            const result = await res.json();
-            const doctorDropdown = document.getElementById('doctorBox');
-            doctorDropdown.innerHTML = '<option value="" disabled selected>Select the doctor</option>';
+            const serviceBox = document.getElementById('doctorBox');
+            serviceBox.innerHTML = '<option value="" disabled selected>Select a service</option>';
 
             result.forEach(doctor => {
                 const option = document.createElement('option');
@@ -112,11 +56,55 @@ document.getElementById('getAnAppointment').onclick = async function() {
             console.error('An error occurred while retrieving the doctors');
         }
     } catch (err) {
-        need = true;
-        console.log('An error occurred while retrieving the doctors ', err);
+        console.error('An error occurred while retrieving the doctors ', err);
     }
+}
 
-    if (need) {
-        alert('no')
+document.addEventListener('DOMContentLoaded', async function() {
+    const doctorBox = document.getElementById('doctorBox');
+    const serviceBox = document.getElementById('serviceBox');
+
+    // on load
+    try {
+        const res = await fetch('/appointments-data', {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        });
+    
+        if (res.ok) {
+            const result = await res.json();
+            doctorBox.innerHTML = '<option value="" disabled selected>Select a doctor</option>';
+            serviceBox.innerHTML = '<option value="" disabled selected>Select a problem</option>';
+
+            let option;
+            result.returnedDoctors.forEach(doctor => {
+                option = document.createElement('option');
+
+                option.value = `${doctor.name}`;
+                option.text = `${doctor.name}`;
+
+                doctorBox.appendChild(option);
+            });
+
+            result.returnedServices.forEach(service => {
+                option = document.createElement('option');
+                
+                option.value = `${service.name}`;
+                option.text = `${service.name}`;
+
+                serviceBox.appendChild(option);
+            });
+        } else {
+            console.error("An error occured retrieving data");
+        }
+    } catch (err) {
+        console.error("An error occured retrieving data: ", err);
     }
+    
+})
+
+document.getElementById('getAnAppointment').onclick = async function() {
+    
 }

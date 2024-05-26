@@ -10,12 +10,12 @@ document.addEventListener('DOMContentLoaded', async function() {
     
     if (token !== null) {
         try {
-            const res = await fetch('/home', {
-                method: "POST",
+            const res = await fetch('/home-validate-token', {
+                method: "GET",
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Authorization': token
                 },
-                body: JSON.stringify({ token })
             });
 
             if (res.ok) {
@@ -33,6 +33,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                 console.error('An error occurred during redirecting: ', res.statusText);
             }
         } catch (err) {
+            deleteCookie('myToken');
             console.error('An error occurred during redirecting: ', err);
         }
     } 
@@ -62,30 +63,6 @@ document.addEventListener('DOMContentLoaded', async function() {
                 window.location.replace('/login');
             }
         };
-    }
-
-    // load the page
-    try {
-        const res = await fetch('/home', {
-            method: "GET",
-            headers: {
-                'Content-Type': 'application/json'
-            },
-        });
-
-        if (res.ok) {
-            const result = await res.json();
-
-            if (result.success) {
-                // load the pictures
-            } else {
-                console.error("Error retrieving pictures from the database");         
-            }
-        } else {
-            console.error('An error occurred during redirecting: ', res.statusText);
-        }
-    } catch (err) {
-        console.error('An error occurred during redirecting: ', err);
     }
 });
 

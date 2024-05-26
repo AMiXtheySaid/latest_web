@@ -9,7 +9,7 @@ document.getElementById('changePasswordBtn').onclick = async function() {
     const token = getCookie("myToken");
 
     try {
-        const res = await fetch ('/change-password', {
+        const res = await fetch ('/change-password-btn', {
             method: "PUT",
             headers: {
                 'Content-Type' : 'application/json'

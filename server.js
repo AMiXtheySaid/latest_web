@@ -15,7 +15,8 @@ const { getDoctors } = require('./services/getDoctorsService.js')
 app.use(express.static(path.join(__dirname, './frontend')));
 app.use(express.json());
 
-// app.get
+/////////////////////////////////
+// .get web pages
 app.get('/', (req, res) => {
     res.sendFile(path.resolve(__dirname, './frontend/main_page.html'));
 });
@@ -54,32 +55,16 @@ app.get('/delete-account', async (req, res) => {
 
 app.get('/appointments', async (req, res) => {
     res.sendFile(path.resolve(__dirname, './frontend/appointments.html'));
-})
+});
 
 app.get('/past-appointments', async (req, res) => {
     res.sendFile(path.resolve(__dirname, './frontend/pastAppointments.html'));
 })
 
-// app.post
-app.post('/login', async (req, res) => {
-    const { username, password } = req.body;
+/////////////////////////////////////////////////////////////////
+// .put .post .delete updates 
 
-    try {
-        const result = await signinBtn(username, password);
-
-        if (result.success) {
-            res.status(200).json({ success: result.success, message: 'Logged in successfully!', token: result.data });
-        } else {
-            console.log(`Login failed: ${result.message}`);
-            res.status(400).json({ success: false, message: `${result.message}` });
-        }
-    } catch (err) {
-        console.error('Error during login: ', err);
-        res.status(500).json({ success: false, message: 'Internal server error' });
-    }
-});
-
-app.post('/register', async (req, res) => {
+app.post('/register-btn', async (req, res) => {
     const { username, password, email, phone } = req.body;
 
     try {
@@ -96,32 +81,12 @@ app.post('/register', async (req, res) => {
     }
 })
 
-app.post('/home', async (req, res) => {
-    const { token } = req.body;
-
-    const decryptedToken = (await decryptToken(token)).data;
-    const username = decryptedToken.username;
-    const password = decryptedToken.password;
-
-    try {
-        const validateDataResponse = await validateData(username, password);
-
-        if (validateDataResponse.success) {
-            res.status(200).json({ success: true, token: token, data: username });
-        } else {
-            res.status(401).json({ success: false, message: 'Unauthorized' });
-        }
-    } catch {
-        res.status(500).json({ success: false, message: 'An internal error occurred' });
-    }
-})
-
 app.post('/forgot-password', async (req, res) => {
     const { email } = req.body;
     await emailValidator(email);
 })
 
-app.put('/change-password', async (req, res) => {
+app.put('/change-password-btn', async (req, res) => {
     const { token, oldPassword, newPassword, repeatNewPassword } = req.body;
     const decryptedToken = (await decryptToken(token)).data;
 
@@ -148,7 +113,7 @@ app.put('/change-password', async (req, res) => {
     }
 })
 
-app.delete('/delete-account', async (req, res) => {
+app.delete('/delete-account-btn', async (req, res) => {
     const { token, password } = req.body;
 
     const decryptedToken = (await decryptToken(token)).data;
@@ -168,20 +133,71 @@ app.delete('/delete-account', async (req, res) => {
 
 })
 
-app.post('/doctors', async (req, res) => {
+/////////////////////////////////////////
+// .get data for the web pages
+
+app.get('/doctors', async (req, res) => {
     const { service } = req.body;
-    const returnedDoctors = await getDoctors(service);
+    const { returnedDoctors } = (await getDoctors(service));
 
-    console.log(returnedDoctors)
     res.status(200).json({ returnedDoctors });
-})
+});
 
-app.post('/services', async (req, res) => {
+app.get('/services', async (req, res) => {
     const { doctor } = req.body;
-    const returnedServices = (await getServices(doctor)).data;
+    const { returnedServices } = (await getServices(doctor)).data;
 
     res.status(200).json({ returnedServices });
-})
+});
+
+app.get('/appointments-data', async (req, res) => {
+    const returnedDoctors = (await getDoctors()).data;
+    const returnedServices = (await getServices()).data;
+
+    res.status(200).json({ returnedDoctors, returnedServices });
+});
+
+app.get('/home-validate-token', async (req, res) => {
+    const token = req.headers['authorization'];
+
+    const decryptedToken = (await decryptToken(token)).data;
+    const username = decryptedToken.username;
+    const password = decryptedToken.password;
+
+    try {
+        const validateDataResponse = await validateData(username, password);
+
+        if (validateDataResponse.success) {
+            res.status(200).json({ success: true, token: token, data: username });
+        } else {
+            res.status(401).json({ success: false, message: 'Unauthorized' });
+        }
+    } catch {
+        res.status(500).json({ success: false, message: 'An internal error occurred' });
+    }
+});
+
+app.get('/login-info', async (req, res) => {
+    const username = req.headers['username'];
+    const password = req.headers['password'];
+
+    try {
+        const result = await signinBtn(username, password);
+
+        if (result.success) {
+            res.status(200).json({ success: result.success, message: 'Logged in successfully!', token: result.data });
+        } else {
+            console.log(`Login failed: ${result.message}`);
+            res.status(400).json({ success: false, message: `${result.message}` });
+        }
+    } catch (err) {
+        console.error('Error during login: ', err);
+        res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+});
+
+/////////////////////////////////////////////////
+// do not touch
 
 app.listen(port, () => {
     console.log(`Web listening to port ${port}`);

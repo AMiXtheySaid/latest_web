@@ -3,7 +3,7 @@ document.getElementById('deleteAccountBtn').onclick = async function() {
     const token = getCookie('myToken');
 
     try {
-        const res = await fetch('delete-account', {
+        const res = await fetch('delete-account-btn', {
             method: "DELETE",
             headers: {
                 'Content-Type' : 'application/json'

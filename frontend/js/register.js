@@ -6,7 +6,7 @@ document.getElementById("registerBtn").onclick = async function () {
 
     var successfullyRegistered = false;
     try {
-        const res = await fetch('/register', {
+        const res = await fetch('/register-btn', {
             method: "POST",
             headers: {
                 'Content-Type' : 'application/json'
@@ -34,13 +34,14 @@ document.getElementById("registerBtn").onclick = async function () {
     // auto login
     if (successfullyRegistered) {
         try {
-            const res = await fetch('/login', {
-                method: "POST",
+            const res = await fetch('/login-info', {
+                method: "GET",
                 headers: {
-                    'Content-Type' : 'application/json'
+                    'Content-Type' : 'application/json',
+                    'Username' : username,
+                    'Password' : password
                 },
-                body: JSON.stringify({ username, password })
-            })
+            });
     
             if (res.ok) {
                 const result = await res.json();

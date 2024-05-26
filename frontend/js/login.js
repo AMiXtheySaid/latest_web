@@ -3,13 +3,14 @@ document.getElementById("loginBtn").onclick = async function() {
     const password = document.querySelector('#log_passwordBox').value;
 
     try {
-        const res = await fetch('/login', {
-            method: "POST",
+        const res = await fetch('/login-info', {
+            method: "GET",
             headers: {
-                'Content-Type' : 'application/json'
+                'Content-Type' : 'application/json',
+                'Username' : username,
+                'Password' : password
             },
-            body: JSON.stringify({ username, password })
-        })
+        });
 
         if (res.ok) {
             const result = await res.json();
