@@ -1,0 +1,48 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f9f9f9;
+    color: #333;
+}
+
+header {
+    background-color: #007bff;
+    color: white;
+    padding: 1rem 0;
+    text-align: center;
+}
+
+.about-us {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 1rem;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.about-us h2 {
+    color: #007bff;
+    margin-top: 1.5rem;
+}
+
+.about-us p, .about-us ul {
+    line-height: 1.6;
+    margin: 0.5rem 0;
+}
+
+.about-us ul {
+    list-style-type: disc;
+    padding-left: 1.5rem;
+}
+
+.about-us li {
+    margin: 0.5rem 0;
+}
+
+@media (max-width: 600px) {
+    .about-us {
+        padding: 0.5rem;
+    }
+}

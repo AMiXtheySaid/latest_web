@@ -1,4 +1,4 @@
-const { mysql, credentials, fs, logPath } = require("./db_credentials");
+const { mysql, credentials } = require("./db_credentials");
 const { passwordChecker, getId, generateToken } = require('./functions');
 
 async function changePassword(username, newPassword, repeatNewPassword) {    

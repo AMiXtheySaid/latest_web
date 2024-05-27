@@ -111,3 +111,16 @@ document.getElementById('goToServices').onclick = function() {
 document.getElementById('goToDoctors').onclick = function() {
     window.location.replace('/doctors');
 }
+
+document.getElementById('lowerAboutUs').onclick = async function() {
+    const res = await fetch('/about-us', {
+        method: "GET",
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    })
+
+    if (res.ok) {
+        window.location.replace('/about-us');
+    }
+}

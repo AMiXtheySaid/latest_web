@@ -1,54 +1,10 @@
 const { mysql, credentials } = require('./db_credentials');
 const { decryptToken } = require('./validateCredentials');
-const pool = mysql.createPool(credentials);
-
-async function getId(username) {
-    try {
-        const query = `SELECT id FROM users WHERE username = ?`;
-        const [rows] = await pool.execute(query, [username]);
-        if (rows.length > 0) {
-            return { success: true, data: rows[0].id };
-        } else {
-            return { success: false, message: 'User not found' };
-        }
-    } catch (err) {
-        console.error("Error getting user ID:", err.message);
-        return { success: false, message: 'Error getting user ID' };
-    }
-}
-
-async function getDoctorId(doctorName) {
-    try {
-        const query = `SELECT id FROM doctors WHERE name = ?`;
-        const [rows] = await pool.execute(query, [doctorName]);
-        if (rows.length > 0) {
-            return { success: true, data: rows[0].id };
-        } else {
-            return { success: false, message: 'Doctor not found' };
-        }
-    } catch (err) {
-        console.error("Error getting doctor ID:", err.message);
-        return { success: false, message: 'Error getting doctor ID' };
-    }
-}
-
-async function getServiceId(serviceName) {
-    try {
-        const query = `SELECT id FROM services WHERE name = ?`;
-        const [rows] = await pool.execute(query, [serviceName]);
-        if (rows.length > 0) {
-            return { success: true, data: rows[0].id };
-        } else {
-            return { success: false, message: 'Service not found' };
-        }
-    } catch (err) {
-        console.error("Error getting service ID:", err.message);
-        return { success: false, message: 'Error getting service ID' };
-    }
-}
-
+const { getId, getDoctorId, getServiceId } = require('./functions');
 
 async function checkDoctorSpecialization(doctor, service) {
+    const pool = mysql.createPool(credentials);
+
     try {
         const query = `
             SELECT COUNT(*) AS COUNT
@@ -73,6 +29,8 @@ async function checkDoctorSpecialization(doctor, service) {
 }
 
 async function checkDoctorAvailability(doctor, date) {
+    const pool = mysql.createPool(credentials);
+
     try {
         const query = `
             SELECT COUNT(*) AS appointment_count
@@ -85,7 +43,7 @@ async function checkDoctorAvailability(doctor, date) {
         const appointmentCount = rows[0].appointment_count;
 
         if (appointmentCount >= 3) {
-            return { success: false, message: 'Doctor has reached the maximum number of appointments for the day' };
+            return { success: false, message: 'Doctor has reached the maximum number of appointments for that day' };
         } else {
             return { success: true, message: 'Ok' };
         }
@@ -96,6 +54,8 @@ async function checkDoctorAvailability(doctor, date) {
 }
 
 async function getAppointment(token, service, doctor, date) {
+    const pool = mysql.createPool(credentials);
+
     try {
         const user = (await decryptToken(token)).data.username;
         const userId = (await getId(user)).data;

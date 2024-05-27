@@ -123,19 +123,26 @@ document.getElementById('getAnAppointment').onclick = async function() {
             },
         });
 
+        const result = await res.json();
         if (res.ok) {
-            const result = await res.json();
-
             if (result.success) {
                 window.location.replace('/home');
             } else {
                 getServices(doctorBox);                
             }
         } else {
+            const errorText = result.message;
+            document.getElementById("errorBox").textContent = errorText;
             console.error("An error occured during the doctor availability check up: ", err);
         }
     } catch (err) {
+        const errorText = result.message;
+        document.getElementById("errorBox").textContent = errorText;
         console.error("An error occured during the doctor availability check up: ", err);
         window.location.replace('/appointments');
     }
+}
+
+document.getElementById('homeBtn').onclick = function() {
+    window.location.replace('home');
 }

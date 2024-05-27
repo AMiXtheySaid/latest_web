@@ -148,3 +148,7 @@ document.getElementById('deleteAccount').onclick = function() {
 document.getElementById('makeAnAppointment').onclick = function() {
     window.location.replace('/appointments');
 }
+
+document.getElementById('homeBtn').onclick = function() {
+    window.location.replace('/home');
+}
