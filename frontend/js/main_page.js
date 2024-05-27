@@ -3,7 +3,6 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     const loginProfile = document.getElementById('loginProfile');
     const dropdownContent = document.querySelector('.dropdownContent');
-    const pictureContainer = document.getElementById('pictureContainerBox');
 
     var isLoggedIn = false;
     var username = null;
@@ -91,6 +90,16 @@ document.getElementById('makeAnAppointment').onclick = function() {
     window.location.replace('/appointments');
 }
 
-document.getElementById('goToAppointments').onclick = function() {
-    window.location.replace('/past-appointments');
+document.getElementById('goToAppointments').onclick = async function() {
+    //window.location.replace('/past-appointments');
+    const token = getCookie("myToken");
+    const res = await fetch('/get-past-appointments', {
+        method: "GET",
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': token
+        },
+    });
+
+    res;
 }

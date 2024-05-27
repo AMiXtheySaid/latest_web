@@ -106,5 +106,36 @@ document.addEventListener('DOMContentLoaded', async function() {
 })
 
 document.getElementById('getAnAppointment').onclick = async function() {
-    
+    const doctorBox = document.getElementById('doctorBox').value;
+    const serviceBox = document.getElementById('serviceBox').value;
+    const dateBox = document.getElementById('dateBox').value;
+    const token = getCookie('myToken');
+
+    try {
+        const res = await fetch('/get-an-appointment', {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization' : token,
+                'Doctor' : doctorBox,
+                'Service' : serviceBox,
+                'Thedate' : dateBox,
+            },
+        });
+
+        if (res.ok) {
+            const result = await res.json();
+
+            if (result.success) {
+                window.location.replace('/home');
+            } else {
+                getServices(doctorBox);                
+            }
+        } else {
+            console.error("An error occured during the doctor availability check up: ", err);
+        }
+    } catch (err) {
+        console.error("An error occured during the doctor availability check up: ", err);
+        window.location.replace('/appointments');
+    }
 }

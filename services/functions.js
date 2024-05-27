@@ -78,6 +78,48 @@ async function getId(username) {
     }
 }
 
+async function getDoctorId(doctor) {
+    let pool = mysql.createPool(credentials);
+
+    try {
+        var con = await pool.getConnection();
+        var [rows] = await con.execute("SELECT id FROM doctors WHERE name = ?", [doctor]);
+        var returnedId = rows.length > 0 ? rows[0].id : null;
+
+        if (returnedId !== null) {
+            return { success: true, data: returnedId };
+        } else {
+            return { success: false, data: null };
+        }
+    } catch (err) {
+        console.log(`Error during Doctor's ID obtaining: `, err);
+        return { success: false, message: 'An internal error occured' };
+    } finally {
+        pool.end();
+    }
+}
+
+async function getServiceId(service) {
+    let pool = mysql.createPool(credentials);
+
+    try {
+        var con = await pool.getConnection();
+        var [rows] = await con.execute("SELECT id FROM services WHERE name = ?", [service]);
+        var returnedId = rows.length > 0 ? rows[0].id : null;
+
+        if (returnedId !== null) {
+            return { success: true, data: returnedId };
+        } else {
+            return { success: false, data: null };
+        }
+    } catch (err) {
+        console.log(`Error during Service's ID obtaining: `, err);
+        return { success: false, message: 'An internal error occured' };
+    } finally {
+        pool.end();
+    }
+}
+
 async function generateToken(id, username, password) {
     const secretKey = (await getPrivateKey()).data;
 
@@ -95,4 +137,4 @@ function generateSecretKey() {
     return crypto.randomBytes(32).toString('hex');
 }
 
-module.exports = { getPrivateKey, passwordChecker, emailChecker, getId, generateToken, phoneChecker };
+module.exports = { getPrivateKey, passwordChecker, emailChecker, getId, generateToken, phoneChecker, getDoctorId, getServiceId };

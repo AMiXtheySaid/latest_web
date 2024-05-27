@@ -10,7 +10,9 @@ const { emailValidator, changePassword } = require('./services/email_password_se
 const { validateData, decryptToken } = require('./services/validateCredentials.js');
 const { deleteAccount } = require('./services/deleteAccountService.js');
 const { getServices } = require('./services/getServicesService.js');
-const { getDoctors } = require('./services/getDoctorsService.js')
+const { getDoctors } = require('./services/getDoctorsService.js');
+const { getAppointment } = require('./services/getAppointment.js');
+const { getPastAppointments } = require('./services/pastAppointments.js');
 
 app.use(express.static(path.join(__dirname, './frontend')));
 app.use(express.json());
@@ -111,7 +113,7 @@ app.put('/change-password-btn', async (req, res) => {
     } catch {
         res.status(401).json({ success: false, message: "Unauthorized" });
     }
-})
+});
 
 app.delete('/delete-account-btn', async (req, res) => {
     const { token, password } = req.body;
@@ -131,7 +133,27 @@ app.delete('/delete-account-btn', async (req, res) => {
         res.status(400).json({ success: false, message: "Wrong Password" });
     }
 
-})
+});
+
+app.post('/get-an-appointment', async (req, res) => {
+    const doctor = req.headers['doctor'];
+    const service = req.headers['service'];
+    const token = req.headers['authorization'];
+    const date = req.headers['thedate'];
+
+    if (doctor && service) {
+        const appointment = await getAppointment(token, service, doctor, date);
+
+        if (appointment.success) {
+            res.status(200).json({ success: true, message: 'Appointment successfully created' });
+        } else {
+            res.status(400).json({ success: true, message: appointment.message });
+        }
+    } else {
+        res.status(400).json({ success: false, message: "Please fill all the fields" })
+    }
+
+});
 
 /////////////////////////////////////////
 // .get data for the web pages
@@ -195,6 +217,19 @@ app.get('/login-info', async (req, res) => {
         res.status(500).json({ success: false, message: 'Internal server error' });
     }
 });
+
+app.get('/get-past-appointments', async (req, res) => {
+    const token = req.headers['authorization'];
+
+    const user = (await decryptToken(token)).data.username;
+    const appointments = await getPastAppointments(user);
+
+    if (appointments.success) {
+        res.status(200).json({ data: appointments.data });
+    } else {
+        res.status(400).json({ success: false, message: "An error occured retrieving the past appointments" });
+    }
+})
 
 /////////////////////////////////////////////////
 // do not touch
