@@ -1,6 +1,6 @@
 async function getDoctors(service) {
     try {
-        const res = await fetch('/doctors', {
+        const res = await fetch('/doctors-data', {
             method: "GET",
             headers: {
                 'Content-Type': 'application/json'
@@ -31,7 +31,7 @@ async function getDoctors(service) {
 
 async function getServices(doctor) {
     try {
-        const res = await fetch('/services', {
+        const res = await fetch('/services-data', {
             method: "GET",
             headers: {
                 'Content-Type': 'application/json'

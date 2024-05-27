@@ -8,11 +8,12 @@
 </head>
 <body>
 
+     <!-- The Navbar -->
     <div class="navbar">
         <!-- The Dropdown -->
         <div class="dropdown">
             <!-- the profile button which expands -->
-            <button id="loginProfile" class="dropdownBtn"></button> 
+            <button id="loginProfile" class="dropdownBtn">Profile</button> 
 
             <!-- The content inside the Dropdown -->
             <div class="dropdownContent">
@@ -30,10 +31,42 @@
         <button id="aboutUs">About Us</button>
     </div>
 
-    <div class="pictureContainer" id="pictureContainerBox">
-
+    <!-- First section -->
+    <div class="section">
+        <div class="section-img">
+            <img src="./pictures/services.jpg" alt="Dental Service 1">
+        </div>
+        <div class="section-content">
+            <h2>Our Services</h2>
+            <p>We offer a variety of dental services to ensure you have a healthy smile. From routine checkups to advanced procedures, we have you covered.</p>
+            <button id="goToServices">Our Services</button>
+        </div>
     </div>
-    
+
+    <!-- Second section -->
+    <div class="section reverse">
+        <div class="section-img">
+            <img src="./pictures/doctors.jpg" alt="Dental Service 2">
+        </div>
+        <div class="section-content">
+            <h2>Experienced Staff</h2>
+            <p>Our team of experienced professionals is here to provide you with the best dental care possible.</p>
+            <button id="goToDoctors">Our Doctors</button>
+        </div>
+    </div>
+
+    <!-- Third section -->
+    <div class="section">
+        <div class="section-img">
+            <img src="./pictures/whyUs.jpg" alt="Dental Service 3">
+        </div>
+        <div class="section-content">
+            <h2>State-of-the-Art Facility</h2>
+            <p>Our clinic is equipped with the latest technology to ensure you receive top-notch dental care.</p>
+            <button id="learnMore3">Learn More</button>
+        </div>
+    </div>
+
     <script type="text/javascript" src="./js/cookies.js"></script>
     <script type="text/javascript" src="./js/main_page.js"></script>
 </body>

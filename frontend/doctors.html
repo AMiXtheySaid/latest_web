@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctors</title>
+    <link rel="stylesheet" href="./css/doctors.css">
+</head>
+<body>
+    <div class="navbar">
+        <!-- The Dropdown -->
+        <div class="dropdown">
+            <!-- the profile button which expands -->
+            <button id="loginProfile" class="dropdownBtn"></button> 
+
+            <!-- The content inside the Dropdown -->
+            <div class="dropdownContent">
+                <button id="makeAnAppointment">Make an appointment</button>
+                <button id="goToAppointments">Past Appointments</button>
+                <br>
+                <button id="logOut">Log Out</button>
+                <button id="changePassword">Change Password</button>
+                <button id="deleteAccount">Delete Account</button>
+            </div>
+        </div>
+
+        <!-- Outside Dropdown -->
+        <button id="contact">Contact</button>
+        <button id="aboutUs">About Us</button>
+    </div>
+
+    <div class="doctors-container" id="doctorsContainer"></div>
+
+    <script type="text/javascript" src="./js/cookies.js"></script>
+    <script type="text/javascript" src="./js/doctors.js"></script>
+</body>
+</html>

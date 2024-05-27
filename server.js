@@ -13,6 +13,8 @@ const { getServices } = require('./services/getServicesService.js');
 const { getDoctors } = require('./services/getDoctorsService.js');
 const { getAppointment } = require('./services/getAppointment.js');
 const { getPastAppointments } = require('./services/pastAppointments.js');
+const { getAllServices } = require('./services/getAllServices.js');
+const { getAllDoctors } = require('./services/getAllDoctors.js');
 
 app.use(express.static(path.join(__dirname, './frontend')));
 app.use(express.json());
@@ -61,6 +63,14 @@ app.get('/appointments', async (req, res) => {
 
 app.get('/past-appointments', async (req, res) => {
     res.sendFile(path.resolve(__dirname, './frontend/pastAppointments.html'));
+})
+
+app.get('/services', async (req, res) => {
+    res.sendFile(path.resolve(__dirname, './frontend/services.html'));
+});
+
+app.get('/doctors', async (req, res) => {
+    res.sendFile(path.resolve(__dirname, './frontend/doctors.html'));
 })
 
 /////////////////////////////////////////////////////////////////
@@ -158,14 +168,14 @@ app.post('/get-an-appointment', async (req, res) => {
 /////////////////////////////////////////
 // .get data for the web pages
 
-app.get('/doctors', async (req, res) => {
+app.get('/doctors-data', async (req, res) => {
     const { service } = req.body;
     const { returnedDoctors } = (await getDoctors(service));
 
     res.status(200).json({ returnedDoctors });
 });
 
-app.get('/services', async (req, res) => {
+app.get('/services-data', async (req, res) => {
     const { doctor } = req.body;
     const { returnedServices } = (await getServices(doctor)).data;
 
@@ -229,7 +239,27 @@ app.get('/get-past-appointments', async (req, res) => {
     } else {
         res.status(400).json({ success: false, message: "An error occured retrieving the past appointments" });
     }
-})
+});
+
+app.get('/get-services-data', async (req, res) => {
+    const services = await getAllServices();
+
+    if (services.success) {
+        res.status(200).json({ success: true, data: services.data });
+    } else {
+        res.status(401).json({ success: false, message: "Error obtaining all the services", data: null });
+    }
+});
+
+app.get('/get-doctors-data', async (req, res) => {
+    const doctors = await getAllDoctors();
+
+    if (doctors.success) {
+        res.status(200).json({ success: true, data: doctors.data });
+    } else {
+        res.status(401).json({ success: false, message: "Error obtaining all the doctors", data: null });
+    }
+});
 
 /////////////////////////////////////////////////
 // do not touch
