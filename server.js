@@ -234,8 +234,9 @@ app.get('/get-past-appointments', async (req, res) => {
     const user = (await decryptToken(token)).data.username;
     const appointments = await getPastAppointments(user);
 
+    console.log(appointments);
     if (appointments.success) {
-        res.status(200).json({ data: appointments.data });
+        res.status(200).json({ success: true, data: appointments.data });
     } else {
         res.status(400).json({ success: false, message: "An error occured retrieving the past appointments" });
     }

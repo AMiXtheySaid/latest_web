@@ -16,7 +16,7 @@ async function getPastAppointments(user) {
         const [rows] = await con.execute(query, [userId]);
 
         const pastAppointments = rows.length > 0 ? rows : null;
-        return { success: false, data: pastAppointments };
+        return { success: true, data: pastAppointments };
     } catch (err) {
         console.log("There was an error retrieving the past appointments: ", err.message);
         return { success: false, message: "An error occured retrieving past appointments" };

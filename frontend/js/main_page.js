@@ -91,17 +91,7 @@ document.getElementById('makeAnAppointment').onclick = function() {
 }
 
 document.getElementById('goToAppointments').onclick = async function() {
-    //window.location.replace('/past-appointments');
-    const token = getCookie("myToken");
-    const res = await fetch('/get-past-appointments', {
-        method: "GET",
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': token
-        },
-    });
-
-    res;
+    window.location.replace('/past-appointments');
 }
 
 document.getElementById('goToServices').onclick = function() {

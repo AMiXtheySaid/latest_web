@@ -1,0 +1,36 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+#pastAppointmentsContainer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    padding: 20px;
+}
+
+.appointment-box {
+    width: 200px;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.appointment-info {
+    text-align: center;
+}
+
+.appointment-info p {
+    margin: 5px 0;
+}
+
+.appointment-box[data-status="past-due"] {
+    background-color: #f8b4b4; 
+}
+
+.appointment-box[data-status="ongoing"] {
+    background-color: #a1ffa1; 
+}
