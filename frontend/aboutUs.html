@@ -7,9 +7,33 @@
     <link rel="stylesheet" href="./css/aboutUs.css">
 </head>
 <body>
+    <div class="navbar">
+        <button id="homeBtn">HOME</button>
+        <!-- The Dropdown -->
+        <div class="dropdown">
+            <!-- the profile button which expands -->
+            <button id="loginProfile" class="dropdownBtn"></button> 
+
+            <!-- The content inside the Dropdown -->
+            <div class="dropdownContent">
+                <button id="makeAnAppointment">Make an appointment</button>
+                <button id="goToAppointments">Past Appointments</button>
+                <br>
+                <button id="logOut">Log Out</button>
+                <button id="changePassword">Change Password</button>
+                <button id="deleteAccount">Delete Account</button>
+            </div>
+        </div>
+
+        <!-- Outside Dropdown -->
+        <button id="contact">Contact</button>
+        <button id="aboutUs">About Us</button>
+    </div>
+
     <header>
         <h1>About Us</h1>
     </header>
+    
     <section class="about-us">
         <h2>Welcome to AMeX Dental Clinic!</h2>
         <p>At <b>AMeX Dental Clinic</b>, we are dedicated to providing exceptional dental care to our community. Our mission is to help you achieve and maintain a healthy, beautiful smile in a comfortable and friendly environment. With a team of highly skilled professionals and state-of-the-art technology, we are committed to delivering personalized care tailored to meet your unique needs.</p>
@@ -44,5 +68,8 @@
             <li>Community Involvement: We are proud to be an active part of our community, participating in local events and supporting charitable initiatives.</li>
         </ul>
     </section>
+
+    <script type="text/javascript" src="./js/cookies.js"></script>
+    <script type="text/javascript" src="./js/aboutUs.js"></script>
 </body>
 </html>
